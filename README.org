@@ -1,0 +1,789 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:nil p:nil pri:nil prop:nil stat:t tags:t
+#+OPTIONS: tasks:t tex:t timestamp:t title:t toc:nil todo:t |:t
+#+TITLE: Transforming Code into Beautiful, Idiomatic Python
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.3.1 (Org mode 9.1.3)
+#+STARTUP: indent
+
+#+OPTIONS: reveal_center:t reveal_control:t reveal_height:-1
+#+OPTIONS: reveal_history:nil reveal_keyboard:t reveal_overview:t
+#+OPTIONS: reveal_progress:t reveal_rolling_links:nil reveal_single_file:nil
+#+OPTIONS: reveal_slide_number:"c" reveal_title_slide:"%t" reveal_width:-1
+#+REVEAL_MARGIN: -1
+#+REVEAL_MIN_SCALE: -1
+#+REVEAL_MAX_SCALE: -1
+#+REVEAL_ROOT: .
+#+REVEAL_TRANS: default
+#+REVEAL_SPEED: default
+#+REVEAL_THEME: solarized
+#+REVEAL_EXTRA_CSS:
+#+REVEAL_EXTRA_JS:
+#+REVEAL_HLEVEL:1
+#+REVEAL_TITLE_SLIDE_BACKGROUND:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_POSITION:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_REPEAT:
+#+REVEAL_TITLE_SLIDE_BACKGROUND_TRANSITION:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_SIZE:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_POSITION:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_REPEAT:
+#+REVEAL_DEFAULT_SLIDE_BACKGROUND_TRANSITION:
+#+REVEAL_MATHJAX_URL: https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+#+REVEAL_PREAMBLE:
+#+REVEAL_HEAD_PREAMBLE:
+#+REVEAL_POSTAMBLE:
+#+REVEAL_MULTIPLEX_ID:
+#+REVEAL_MULTIPLEX_SECRET:
+#+REVEAL_MULTIPLEX_URL:
+#+REVEAL_MULTIPLEX_SOCKETIO_URL:
+#+REVEAL_SLIDE_HEADER:
+#+REVEAL_SLIDE_FOOTER:
+#+REVEAL_PLUGINS: (highlight notes)
+#+REVEAL_DEFAULT_FRAG_STYLE:
+#+REVEAL_INIT_SCRIPT: zoomKey: 'shift'
+#+REVEAL_HIGHLIGHT_CSS: %r/lib/css/zenburn.css
+
+#+BEGIN_NOTES
+Notes from Raymond Hettinger's talk at pycon US 2013 [[https://www.youtube.com/watch?v=OSGv2VnC0go][video]] [[https://speakerdeck.com/pyconslides/transforming-code-into-beautiful-idiomatic-python-by-raymond-hettinger-1][slides]]
+
+This is based on a transcript of Raymond's talk by Jeff Paine. I've updated
+it to purely Python 3 and added notes about Python 2 where necessary. It's
+also written in org-mode which means you could actually run the code here.
+
+It's also designed to be easily exported as a slideshow with [[https://github.com/yjwen/org-reveal/][ox-reveal]].
+#+END_NOTES
+
+* Looping over a range of numbers
+#+BEGIN_SRC python :results output
+  for i in range(6):
+      print(i**2)
+#+END_SRC
+
+** Python 2 note
+In Python 2 the ~range~ function constructs a real list in memory and returns
+it. In Python 3 ~range~ creates an iterator which produces the values one at a
+time which is quicker and saves memory. The old is achieved with
+~list(range(n))~ in Python 3.
+
+In Python 2 the ~xrange~ function exists to create an iterator instead of a
+list and is equivalent to ~range~ in Python 3.
+
+* Looping over a collection
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+  for i in range(len(colors)):
+      print(colors[i])
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+  for color in colors:
+      print(color)
+#+END_SRC
+
+* Looping backwards
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+  for i in range(len(colors)-1, -1, -1):
+      print(colors[i])
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+  for color in reversed(colors):
+      print(color)
+#+END_SRC
+
+* Looping over a collection and indices
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+  for i in range(len(colors)):
+      print(i, '--->', colors[i])
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  for i, color in enumerate(colors):
+      print(i, '--->', color)
+#+END_SRC
+
+#+BEGIN_QUOTE
+It's fast and beautiful and saves you from tracking the individual indices and
+incrementing them.
+#+END_QUOTE
+#+BEGIN_QUOTE
+Whenever you find yourself manipulating indices [in a collection], you're
+probably doing it wrong.
+#+END_QUOTE
+
+* Looping over two collections
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew']
+  colors = ['red', 'green', 'blue', 'yellow']
+
+  n = min(len(names), len(colors))
+  for i in range(n):
+      print(names[i], '--->', colors[i])
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew']
+  colors = ['red', 'green', 'blue', 'yellow']
+
+  for name, color in zip(names, colors):
+      print(name, '--->', color)
+#+END_SRC
+
+** Python 2 note
+In Python 2, ~zip~ creates a new list in memory. ~izip~ instead creates an
+iterator which is more efficient and equivalent to ~zip~ in Python 3.
+
+* Looping in sorted order
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+
+  print("Forward sorted order:")
+  for color in sorted(colors):
+      print(color)
+
+  print("Backwards sorted order:")
+  for color in sorted(colors, reverse=True):
+      print(color)
+
+  print("With custom order:")
+  for color in sorted(colors, key=len):
+      print(color)
+#+END_SRC
+
+** Python 2 note
+In Python 2 the ~sorted~ function had an additional parameter, ~cmp~, which
+took a comparison function as an alternative way to define a custom sorting
+order. This was removed in Python 3 as the ~key~ parameter is more beautiful
+and faster.
+
+* Call a function until a sentinel value
+#+BEGIN_SRC python :results output
+  import io
+  buf = io.StringIO("string")
+  chars = []
+  while True:
+      char = buf.read(1)
+      if char == "":
+          break
+      chars.append(char)
+  print(chars)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  import io
+  from functools import partial
+  buf = io.StringIO("string")
+  chars = []
+  for char in iter(partial(buf.read, 1), ""):
+      chars.append(char)
+  print(chars)
+#+END_SRC
+
+#+BEGIN_NOTES
+~iter~ takes two arguments. The first you call over and over again and the
+second is a sentinel value which, when encountered, terminates the iteration.
+#+END_NOTES
+
+* Distinguishing multiple exit points in loops
+#+BEGIN_SRC python :results output
+  def find(seq, target):
+      found = False
+      for i, value in enumerate(seq):
+          if value == target:
+              found = True
+              break
+      if not found:
+          return -1
+      return i
+
+  seq = [1,3,4]
+  print(find(seq, 3))
+  print(find(seq, 2))
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  def find(seq, target):
+      for i, value in enumerate(seq):
+          if value == target:
+              break
+      else:
+          return -1
+      return i
+
+  seq = [1,3,4]
+  print(find(seq, 3))
+  print(find(seq, 2))
+#+END_SRC
+
+#+BEGIN_NOTES
+In Python, ~for~ and ~while~ loops have an ~else~ which is executed when the
+iteration naturally comes to and end (not after a ~break~).
+#+END_NOTES
+
+* Looping over dictionary keys
+#+BEGIN_SRC python :results output
+  d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+  for k in d:
+      print(k)
+
+  for k in list(d.keys()):
+      if k.startswith('r'):
+          del d[k]
+
+  print(d)
+#+END_SRC
+
+#+BEGIN_NOTES
+Use the second version when you need to modify the dictionary in the loop.
+#+END_NOTES
+
+** Python 2 note
+In Python 2, ~dict.keys()~ returned a copy of the dictionary keys. In Python 3
+it returns an iterator so ~list~ must be used to create the copy. You should
+never try to modify the collection that you are iterating over.
+#+BEGIN_QUOTE
+If you mutate something while you're iterating over it, you're living in a
+state of sin and deserve whatever happens to you.
+#+END_QUOTE
+
+* Looping over dictionary keys and values
+#+BEGIN_SRC python :results output
+  d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+  for k in d:
+      print(k, '--->', d[k])
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+  for k, v in d.items():
+      print(k, '--->', v)
+#+END_SRC
+
+#+BEGIN_NOTES
+The first solution has to rehash and do a lookup on every iteration. This way
+produces an iterator which is quicker.
+#+END_NOTES
+
+** Python 2 note
+In Python 2, ~dict.items()~ creates a list in memory and ~dict.iteritems()~
+exists which is equivalent to Python 3 ~dict.items()~.
+
+* Construct a dictionary from pairs
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew']
+  colors = ['red', 'green', 'blue']
+
+  d = dict(zip(names, colors))
+  print(d)
+#+END_SRC
+
+* Counting with dictionaries
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+  d = {}
+  for color in colors:
+      if color not in d:
+          d[color] = 0
+      d[color] += 1
+
+  print(d)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+  d = {}
+  for color in colors:
+      d[color] = d.get(color, 0) + 1
+
+  print(d)
+#+END_SRC
+
+#+REVEAL: split
+
+Another solution uses ~collections.defaultdict~. This does have several
+caveats and is better for advanced users who understand the intricacies.
+
+#+BEGIN_SRC python :results output
+  import collections
+  colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+  d = collections.defaultdict(int)
+  for color in colors:
+      d[color] += 1
+
+  print(d)
+#+END_SRC
+
+* Grouping with dictionaries
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  # group by name length
+  d = {}
+  for name in names:
+      key = len(name)
+      if key not in d:
+          d[key] = []
+      d[key].append(name)
+
+  print(d)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  d = {}
+  for name in names:
+      key = len(name)
+      d.setdefault(key, []).append(name)
+
+  print(d)
+#+END_SRC
+
+#+RESULTS:
+: {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
+
+#+REVEAL: split
+
+Again with ~defaultdict~...
+
+#+BEGIN_SRC python :results output
+  import collections
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  d = collections.defaultdict(list)
+  for name in names:
+      key = len(name)
+      d[key].append(name)
+
+  print(d)
+#+END_SRC
+
+* Pop items from dictionary atomically
+#+BEGIN_SRC python :results output
+  d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+  while d:
+      key, value = d.popitem()
+      print(key, '-->', value)
+
+  print(d)
+#+END_SRC
+
+~dict.popitem()~ is atomic so you don't have to put locks around it to use it
+in threads.
+
+* Linking dictionaries
+#+BEGIN_NOTES
+This common approach allows you to use defaults at first, then override with
+environment variables and then finally with command line
+arguments. Unfortunately, this copies data like crazy.
+#+END_NOTES
+
+#+BEGIN_SRC python :results output
+  import os, argparse
+
+  defaults = {'color': 'red', 'user': 'guest'}
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-u', '--user')
+  parser.add_argument('-c', '--color')
+  namespace = parser.parse_args([])
+  command_line_args = {k:v for k, v in vars(namespace).items() if v}
+
+  d = defaults.copy()
+  d.update(os.environ)
+  d.update(command_line_args)
+
+  print(d)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  import os, argparse
+  from collections import ChainMap
+
+  defaults = {'color': 'red', 'user': 'guest'}
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-u', '--user')
+  parser.add_argument('-c', '--color')
+  namespace = parser.parse_args([])
+  command_line_args = {k:v for k, v in vars(namespace).items() if v}
+
+  d = ChainMap(command_line_args, os.environ, defaults)
+
+  print(dict(d))
+#+END_SRC
+
+** Python 2 note
+~ChainMap~ was introduced in Python 3.3. There is a package on pypi for
+earlier versions of Python.
+
+* Improving clarity
+#+BEGIN_NOTES
+Positional arguments and indices work, but keyword arguments and names are
+better. The first way is convenient for the computer, but the second
+corresponds to how humans think
+#+END_NOTES
+
+** Clarify function calls with keyword arguments
+#+BEGIN_SRC python
+  twitter_search = lambda *args: False
+  twitter_search('@obama', False, 20, True)
+#+END_SRC
+
+*** Better
+#+BEGIN_SRC python :results output
+    twitter_search = lambda *args: False
+    twitter_search('@obama', retweets=False,
+                   numtweets=20, popular=True)
+#+END_SRC
+
+This is slightly slower but is worth it for the code clarity and developer
+time savings.
+
+** Clarify multiple return values with named tuples
+#+BEGIN_SRC python :results output
+  def test():
+      return (0, 4)
+
+  print(test())
+#+END_SRC
+
+Is this rest result good or bad? It's not clear.
+
+*** Better
+#+BEGIN_SRC python :results output
+  from collections import namedtuple
+
+  TestResult = namedtuple("TestResult", ["failed", "attempted"])
+
+  def test():
+      return TestResult(failed=0, attempted=4)
+
+  print(test())
+#+END_SRC
+
+* Unpacking sequences
+#+BEGIN_SRC python :results output
+  p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
+
+  fname = p[0]
+  lname = p[1]
+  age = p[2]
+  email = p[3]
+
+  print(fname, lname, age, email)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
+
+  fname, lname, age, email = p
+
+  print(fname, lname, age, email)
+#+END_SRC
+
+This is faster and more readable.
+
+* Updating multiple state variables
+#+BEGIN_SRC python :results output
+  def fibonacci(n):
+      x = 0
+      y = 1
+      for i in range(n):
+          print(x)
+          t = y
+          y = x + y
+          x = t
+  fibonacci(10)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  def fibonacci(n):
+      x, y = 0, 1
+      for i in range(n):
+          print(x)
+          x, y = y, x + y
+  fibonacci(10)
+#+END_SRC
+
+#+BEGIN_NOTES
+The first approach has several problems:
+- ~x~ and ~y~ are state and state should be updated all at once or not at
+  all. In between lines the state is mismatched and is a common source of
+  errors,
+- ordering of statements matters,
+- it's too low level.
+
+The second approach is more high level, doesn't risk getting the order wrong
+and is fast.
+#+END_NOTES
+
+* Simultaneous state updates
+#+BEGIN_SRC python :results output
+  influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
+
+  tmp_x = x + dx * t
+  tmp_y = y + dy * t
+  tmp_dx = influence(m, x, y, dx, dy, 'x')
+  tmp_dy = influence(m, x, y, dx, dy, 'y')
+  x = tmp_x
+  y = tmp_y
+  dx = tmp_dx
+  dy = tmp_dy
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
+
+  x, y, dx, dy = (x + dx * t,
+                  y + dy * t,
+                  influence(m, x, y, dx, dy, 'x'),
+                  influence(m, x, y, dx, dy, 'y'))
+#+END_SRC
+
+* Efficiency
+Don't move data around unnecessarily. It takes only a little care to avoid
+quadratic behaviour in many cases.
+
+** Concatenating strings
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  s = names[0]
+  for name in names[1:]:
+      s += ', ' + name
+  print(s)
+#+END_SRC
+
+*** Better
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  print(', '.join(names))
+#+END_SRC
+
+** Updating sequences
+#+BEGIN_SRC python :results output
+  names = ['raymond', 'rachel', 'matthew', 'roger',
+           'betty', 'melissa', 'judith', 'charlie']
+
+  del names[0]
+  names.pop(0)
+  names.insert(0, 'mark')
+
+  print(names)
+#+END_SRC
+
+*** Better
+#+BEGIN_SRC python :results output
+  from collections import deque
+
+  names = deque(['raymond', 'rachel', 'matthew', 'roger',
+                 'betty', 'melissa', 'judith', 'charlie'])
+
+  del names[0]
+  names.popleft()
+  names.appendleft('mark')
+
+  print(list(names))
+#+END_SRC
+
+* Using decorators to factor out administrative logic
+#+BEGIN_SRC python :results output
+  def web_lookup(url, saved={}):
+      if url in saved:
+          return saved[url]
+      page = urllib.urlopen(url).read()
+      saved[url] = page
+      return page
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  import functools
+
+  @functools.lru_cache(maxsize=128)
+  def web_lookup(url):
+      return urllib.urlopen(url).read()
+#+END_SRC
+
+* Factor out temporary contexts
+#+BEGIN_SRC python :results output
+  from decimal import Decimal, getcontext, setcontext
+
+  old_context = getcontext().copy()
+  getcontext().prec = 50
+  print(Decimal(355)/Decimal(113))
+  setcontext(old_context)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  from decimal import Decimal, Context, localcontext
+
+  with localcontext(Context(prec=50)):
+      print(Decimal(355)/Decimal(113))
+#+END_SRC
+
+* Opening and closing files
+#+BEGIN_SRC python :results output
+  f = open('README.org')
+  try:
+      firstline = next(f)
+  finally:
+      f.close()
+
+  print(firstline)
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  with open("README.org") as f:
+      firstline = next(f)
+
+  print(firstline)
+#+END_SRC
+
+* Using locks
+#+BEGIN_SRC python :results output
+  import threading
+
+  lock = threading.Lock()
+
+  lock.acquire()
+  try:
+      print('Critical section 1')
+      print('Critical section 2')
+  finally:
+      lock.release()
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  import threading
+
+  lock = threading.Lock()
+
+  with lock:
+      print('Critical section 1')
+      print('Critical section 2')
+#+END_SRC
+
+* Custom context managers
+
+** Ignoring exceptions
+#+BEGIN_SRC python :results output
+  import os
+  try:
+      os.remove('somefile.tmp')
+  except OSError:
+      pass
+#+END_SRC
+
+*** Better
+#+BEGIN_SRC python :results output
+  import os
+  from contextlib import suppress
+  with suppress(OSError):
+      os.remove('somefile.tmp')
+#+END_SRC
+
+~contextlib.suppress~ is included in Python 3.4 and later. In earlier versions
+it can be implemented as:
+#+BEGIN_SRC python
+  from contextlib import contextmanager
+  @contextmanager
+  def suppress(*exceptions):
+      try:
+          yield
+      except exceptions:
+          pass
+#+END_SRC
+
+** Output redirection
+#+BEGIN_SRC python :results output
+  import sys
+  with open('help.txt', 'w') as f:
+      oldstdout = sys.stdout
+      sys.stdout = f
+      try:
+          help(pow)
+      finally:
+          sys.stdout = oldstdout
+#+END_SRC
+
+*** Better
+#+BEGIN_SRC python :results output
+  from contextlib import redirect_stdout
+  with open('help.txt', 'w') as f:
+      with redirect_stdout(f):
+          help(pow)
+#+END_SRC
+
+~contextlib.redirect_stdout~ is included since Python 3.4. In earlier versions
+use:
+#+BEGIN_SRC python :results output
+  import sys
+  from contextlib import contextmanager
+  @contextmanager
+  def redirect_stdout(fileobj):
+      oldstdout = sys.stdout
+      sys.stdout = fileobj
+      try:
+          yield fileobj
+      finally:
+          sys.stdout = oldstdout
+#+END_SRC
+
+* Concise, expressive one-liners
+Don't try to put too much on one line, but try not to break atoms of thought
+into subatomic particles. One logical line of code equals one sentence in
+English.
+#+BEGIN_SRC python :results output
+  result = []
+  for i in range(10):
+      s = i ** 2
+      result.append(s)
+  print(sum(result))
+#+END_SRC
+
+** Better
+#+BEGIN_SRC python :results output
+  print(sum(i**2 for i in range(10)))
+#+END_SRC
+
+The first way tells you what to do, the second way tells you what you want.
+
+* End
