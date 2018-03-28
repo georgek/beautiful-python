@@ -786,4 +786,77 @@ English.
 
 The first way tells you what to do, the second way tells you what you want.
 
+* Class properties
+#+BEGIN_SRC python :results output
+  class Widget():
+      def __init__(self, width, position):
+          self.width = width
+          self.position = position
+
+  w = Widget(1000, 200)
+  print(w.width, w.position)
+#+END_SRC
+
+#+RESULTS:
+: 1000 200
+
+** Getter and setter
+#+BEGIN_SRC python :results output
+  class Widget():
+      def __init__(self, width, position):
+          self._width = width
+          self._position = position
+
+      def get_width(self):
+          return self._width
+
+      def set_width(self, new_width):
+          self._width = new_width
+
+      def get_position(self):
+          return self._position
+
+      def set_position(self, new_position):
+          if new_position < 0:
+              self._position = 0
+          elif new_position > self._width:
+              self._position = self._width
+          else:
+              self._position = new_position
+
+  w = Widget(1000, 200)
+  w.set_position(1200)
+  print(w.get_width(), w.get_position())
+#+END_SRC
+
+#+RESULTS:
+: 1000 1000
+
+** Better
+#+BEGIN_SRC python :results output
+  class Widget():
+      def __init__(self, width, position):
+          self.width = width
+          self.position = position
+
+      @property
+      def position(self):
+          return self._position
+
+      @position.setter
+      def position(self, new_position):
+          if new_position < 0:
+              self._position = 0
+          elif new_position > self.width:
+              self._position = self.width
+          else:
+              self._position = new_position
+
+  w = Widget(1000, 1200)
+  print(w.width, w.position)
+#+END_SRC
+
+#+RESULTS:
+: 1000 1000
+
 * End
