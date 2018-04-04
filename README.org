@@ -215,12 +215,12 @@ probably doing it wrong."
 
 ** Looping over two collections
 #+BEGIN_SRC python :results output :exports both :cache yes
-  names = ['raymond', 'rachel', 'matthew']
-  colors = ['red', 'green', 'blue', 'yellow']
-y
-  n = min(len(names), len(colors))
-  for i in range(n):
-      print(names[i], '--->', colors[i])
+    names = ['raymond', 'rachel', 'matthew']
+    colors = ['red', 'green', 'blue', 'yellow']
+
+    n = min(len(names), len(colors))
+    for i in range(n):
+        print(names[i], '--->', colors[i])
 #+END_SRC
 
 #+RESULTS[c662442b8db17d5223202aecccc16140900b2b51]:
@@ -236,6 +236,11 @@ y
   for name, color in zip(names, colors):
       print(name, '--->', color)
 #+END_SRC
+
+#+RESULTS:
+: raymond ---> red
+: rachel ---> green
+: matthew ---> blue
 
 *** Python 2 note
 In Python 2, ~zip~ creates a new list in memory. ~izip~ instead creates an
@@ -276,7 +281,7 @@ iterator which is more efficient and equivalent to ~zip~ in Python 3.
 
 ** Custom sort order
 
-#+BEGIN_SRC python :results output
+#+BEGIN_SRC python :results output 
   colors = ['red', 'green', 'blue', 'yellow']
 
   def compare_length(l1, l2):
@@ -289,6 +294,8 @@ iterator which is more efficient and equivalent to ~zip~ in Python 3.
       print(color)
 #+END_SRC
 
+#+RESULTS:
+
 #+REVEAL: split
 
 #+BEGIN_SRC python :results output :exports both :cache yes
@@ -299,16 +306,16 @@ iterator which is more efficient and equivalent to ~zip~ in Python 3.
       print(color)
 #+END_SRC
 
-#+BEGIN_NOTES
-Key is similar to ordering by a function in SQL.
-#+END_NOTES
-
 #+RESULTS[c3ae2d155fa205969f59c36193b3f1a497a4cb67]:
 : With custom order:
 : red
 : blue
 : green
 : yellow
+
+#+BEGIN_NOTES
+Key is similar to ordering by a function in SQL.
+#+END_NOTES
 
 *** Python 2 note
 In Python 2 the ~sorted~ function had the ~cmp~ parameter which took a
@@ -331,7 +338,7 @@ and faster.
   print(chars)
 #+END_SRC
 
-#+RESULTS[3ffb0a854886174655f84ee6d8746f44f2d16368]:
+#+RESULTS[e811bbf3b166cf835f8f2c0b94aa6fbd9c4cad66]:
 : ['s', 't', 'r', 'i', 'n', 'g']
 
 *** Better
@@ -347,7 +354,7 @@ and faster.
   print(chars)
 #+END_SRC
 
-#+RESULTS[2068c824057938d8eaf48754db8fd83036ae9945]:
+#+RESULTS[761fc9130f5bd6fa94fb1fc20fe5557224e8839b]:
 : ['s', 't', 'r', 'i', 'n', 'g']
 
 #+BEGIN_NOTES
@@ -411,7 +418,7 @@ iteration naturally comes to and end (not after a ~break~).
   print(squares)
 #+END_SRC
 
-#+RESULTS[7d4fcc4f6e5e612a7dab896b3ef47cba659d8c44]:
+#+RESULTS[4428577695498e88ee67e65166d3fc255492acf6]:
 : [0, 9, 36, 81]
 
 *** Better
@@ -434,7 +441,7 @@ iteration naturally comes to and end (not after a ~break~).
   print(sum(result))
 #+END_SRC
 
-#+RESULTS[72765012115bc53626895471a38c4a8a1955ebfd]:
+#+RESULTS[c89186e281dbb4b97a5573c94c2152f869004fb1]:
 : 285
 
 *** Better
@@ -735,12 +742,18 @@ corresponds to how humans think
   twitter_search('@obama', False, 20, True)
 #+END_SRC
 
+#+RESULTS:
+: None
+
 *** Better
 #+BEGIN_SRC python
   twitter_search = lambda *args, **kwargs: False
   twitter_search('@obama', retweets=False,
                  numtweets=20, popular=True)
 #+END_SRC
+
+#+RESULTS:
+: None
 
 #+BEGIN_NOTES
 This is slightly slower but is worth it for the code clarity and developer
@@ -889,6 +902,8 @@ and is fast.
   dy = tmp_dy
 #+END_SRC
 
+#+RESULTS:
+
 *** Better
 #+BEGIN_SRC python :results output
   influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
@@ -898,6 +913,8 @@ and is fast.
                   influence(m, x, y, dx, dy, 'x'),
                   influence(m, x, y, dx, dy, 'y'))
 #+END_SRC
+
+#+RESULTS:
 
 * Efficiency
 #+BEGIN_NOTES
@@ -973,6 +990,8 @@ quadratic behaviour in many cases.
       return page
 #+END_SRC
 
+#+RESULTS:
+
 *** Better
 #+BEGIN_SRC python :results output
   import functools
@@ -981,6 +1000,8 @@ quadratic behaviour in many cases.
   def web_lookup(url):
       return urllib.urlopen(url).read()
 #+END_SRC
+
+#+RESULTS:
 
 ** Factor out temporary contexts
 #+BEGIN_SRC python :results output :exports both :cache yes
@@ -1047,6 +1068,10 @@ quadratic behaviour in many cases.
       lock.release()
 #+END_SRC
 
+#+RESULTS:
+: Critical section 1
+: Critical section 2
+
 *** Better
 #+BEGIN_SRC python :results output
   import threading
@@ -1058,6 +1083,10 @@ quadratic behaviour in many cases.
       print('Critical section 2')
 #+END_SRC
 
+#+RESULTS:
+: Critical section 1
+: Critical section 2
+
 ** Custom context managers
 *** Ignoring exceptions
 #+BEGIN_SRC python :results output
@@ -1067,6 +1096,8 @@ quadratic behaviour in many cases.
   except OSError:
       pass
 #+END_SRC
+
+#+RESULTS:
 
 #+BEGIN_NOTES
 Don't check file exists then remove. Then you get a race condition.
@@ -1080,6 +1111,8 @@ Don't check file exists then remove. Then you get a race condition.
   with suppress(OSError):
       os.remove('somefile.tmp')
 #+END_SRC
+
+#+RESULTS:
 
 #+REVEAL: split
 
@@ -1095,6 +1128,9 @@ it can be implemented as:
           pass
 #+END_SRC
 
+#+RESULTS:
+: None
+
 *** Output redirection
 #+BEGIN_SRC python :results output
   import sys
@@ -1107,6 +1143,8 @@ it can be implemented as:
           sys.stdout = oldstdout
 #+END_SRC
 
+#+RESULTS:
+
 #+REVEAL: split
 
 #+BEGIN_SRC python :results output
@@ -1115,6 +1153,8 @@ it can be implemented as:
       with redirect_stdout(f):
           help(pow)
 #+END_SRC
+
+#+RESULTS:
 
 #+REVEAL: split
 
@@ -1132,6 +1172,8 @@ use:
       finally:
           sys.stdout = oldstdout
 #+END_SRC
+
+#+RESULTS:
 
 * Miscellaneous
 ** Class properties
