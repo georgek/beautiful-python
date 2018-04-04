@@ -22,7 +22,7 @@
 #+REVEAL_THEME: solarized
 #+REVEAL_EXTRA_CSS:
 #+REVEAL_EXTRA_JS:
-#+REVEAL_HLEVEL:1
+#+REVEAL_HLEVEL:2
 #+REVEAL_TITLE_SLIDE_BACKGROUND:
 #+REVEAL_TITLE_SLIDE_BACKGROUND_SIZE:
 #+REVEAL_TITLE_SLIDE_BACKGROUND_POSITION:
@@ -58,7 +58,47 @@ also written in org-mode which means you could actually run the code here.
 It's also designed to be easily exported as a slideshow with [[https://github.com/yjwen/org-reveal/][ox-reveal]].
 #+END_NOTES
 
-* Looping over a range of numbers
+* Pythonic?
+#+BEGIN_NOTES
+We're talking about idiomatic usage.
+#+END_NOTES
+
+** Speak you English?
+#+BEGIN_NOTES
+Am example in English.
+#+END_NOTES
+
+** What am I?
+#+BEGIN_QUOTE
+I am programmer.
+#+END_QUOTE
+
+*** Better
+#+BEGIN_QUOTE
+I am a programmer.
+#+END_QUOTE
+
+** Idiomatic usage
+- More readable,
+- More beautiful,
+- Faster.
+
+* Iterating
+** Looping over a range of numbers
+#+BEGIN_SRC python :results output :exports both :cache yes
+  for i in [0,1,2,3,4,5]:
+      print(i**2)
+#+END_SRC
+
+#+RESULTS[166bb24ee8c7a449d62c9ad3785a3ac0c7d68b85]:
+: 0
+: 1
+: 4
+: 9
+: 16
+: 25
+
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   for i in range(6):
       print(i**2)
@@ -72,7 +112,7 @@ It's also designed to be easily exported as a slideshow with [[https://github.co
 : 16
 : 25
 
-** Python 2 note
+*** Python 2 note
 In Python 2 the ~range~ function constructs a real list in memory and returns
 it. In Python 3 ~range~ creates an iterator which produces the values one at a
 time which is quicker and saves memory. The old is achieved with
@@ -81,80 +121,103 @@ time which is quicker and saves memory. The old is achieved with
 In Python 2 the ~xrange~ function exists to create an iterator instead of a
 list and is equivalent to ~range~ in Python 3.
 
-* Looping over a collection
+** Looping over a collection
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'blue', 'yellow']
+
   for i in range(len(colors)):
       print(colors[i])
 #+END_SRC
 
-#+RESULTS[ab7b1a1a1e133338fcf9b877179e6d80d9ea3f64]:
+#+RESULTS[c5539971279013100731d4362bfcc30604d3229c]:
 : red
 : green
 : blue
 : yellow
 
-** Better
-#+BEGIN_SRC python :results output
+*** Better
+#+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'blue', 'yellow']
+
   for color in colors:
       print(color)
 #+END_SRC
 
-* Looping backwards
+#+RESULTS[e3a9d3e8a53f963b38bc22eab97c6db713986350]:
+: red
+: green
+: blue
+: yellow
+
+** Looping backwards
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'blue', 'yellow']
+
   for i in range(len(colors)-1, -1, -1):
       print(colors[i])
 #+END_SRC
 
-#+RESULTS[35459c5837b625d6014dcec0d3f0f4a4755761b2]:
+#+RESULTS[c9cec3b172581122abdcaf2e9253d0ca2eb2c8d5]:
 : yellow
 : blue
 : green
 : red
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   colors = ['red', 'green', 'blue', 'yellow']
+
   for color in reversed(colors):
       print(color)
 #+END_SRC
 
-* Looping over a collection and indices
+#+RESULTS:
+: yellow
+: blue
+: green
+: red
+
+** Looping over a collection and indices
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'blue', 'yellow']
+
   for i in range(len(colors)):
       print(i, '--->', colors[i])
 #+END_SRC
 
-#+RESULTS[79f8b0ce8a5524f9efcd7452c04620daf5de558f]:
+#+RESULTS[a67844ce83e45d93b829a56c1758b863f0393915]:
 : 0 ---> red
 : 1 ---> green
 : 2 ---> blue
 : 3 ---> yellow
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   colors = ['red', 'green', 'blue', 'yellow']
+
   for i, color in enumerate(colors):
       print(i, '--->', color)
 #+END_SRC
 
-#+BEGIN_QUOTE
-It's fast and beautiful and saves you from tracking the individual indices and
-incrementing them.
-#+END_QUOTE
-#+BEGIN_QUOTE
-Whenever you find yourself manipulating indices [in a collection], you're
-probably doing it wrong.
-#+END_QUOTE
+#+RESULTS:
+: 0 ---> red
+: 1 ---> green
+: 2 ---> blue
+: 3 ---> yellow
 
-* Looping over two collections
+#+BEGIN_NOTES
+"It's fast and beautiful and saves you from tracking the individual indices
+and incrementing them."
+
+"Whenever you find yourself manipulating indices [in a collection], you're
+probably doing it wrong."
+#+END_NOTES
+
+** Looping over two collections
 #+BEGIN_SRC python :results output :exports both :cache yes
   names = ['raymond', 'rachel', 'matthew']
   colors = ['red', 'green', 'blue', 'yellow']
-
+y
   n = min(len(names), len(colors))
   for i in range(n):
       print(names[i], '--->', colors[i])
@@ -165,7 +228,7 @@ probably doing it wrong.
 : rachel ---> green
 : matthew ---> blue
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   names = ['raymond', 'rachel', 'matthew']
   colors = ['red', 'green', 'blue', 'yellow']
@@ -174,76 +237,113 @@ probably doing it wrong.
       print(name, '--->', color)
 #+END_SRC
 
-** Python 2 note
+*** Python 2 note
 In Python 2, ~zip~ creates a new list in memory. ~izip~ instead creates an
 iterator which is more efficient and equivalent to ~zip~ in Python 3.
 
-* Looping in sorted order
+** Looping in sorted order
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'blue', 'yellow']
 
   print("Forward sorted order:")
   for color in sorted(colors):
       print(color)
+#+END_SRC
+
+#+RESULTS[b64b409aa68b20db351d1e619cc453e950371872]:
+: Forward sorted order:
+: blue
+: green
+: red
+: yellow
+
+#+REVEAL: split
+
+#+BEGIN_SRC python :results output :exports both :cache yes
+  colors = ['red', 'green', 'blue', 'yellow']
 
   print("Backwards sorted order:")
   for color in sorted(colors, reverse=True):
       print(color)
+#+END_SRC
+
+#+RESULTS[92ad74090ba47803ca7f47564921f6ef3ecd50e4]:
+: Backwards sorted order:
+: yellow
+: red
+: green
+: blue
+
+** Custom sort order
+
+#+BEGIN_SRC python :results output
+  colors = ['red', 'green', 'blue', 'yellow']
+
+  def compare_length(l1, l2):
+      if len(l1) < len(l2): return -1
+      if len(l1) > len(l2): return 1
+      return 0
+
+  print("With custom order:")
+  for color in sorted(colors, cmp=compare_length):
+      print(color)
+#+END_SRC
+
+#+REVEAL: split
+
+#+BEGIN_SRC python :results output :exports both :cache yes
+  colors = ['red', 'green', 'blue', 'yellow']
 
   print("With custom order:")
   for color in sorted(colors, key=len):
       print(color)
 #+END_SRC
 
-#+RESULTS[1d5ed17333b9075fa593f8e6768d138e23fc9018]:
-#+begin_example
-Forward sorted order:
-blue
-green
-red
-yellow
-Backwards sorted order:
-yellow
-red
-green
-blue
-With custom order:
-red
-blue
-green
-yellow
-#+end_example
+#+BEGIN_NOTES
+Key is similar to ordering by a function in SQL.
+#+END_NOTES
 
-** Python 2 note
-In Python 2 the ~sorted~ function had an additional parameter, ~cmp~, which
-took a comparison function as an alternative way to define a custom sorting
+#+RESULTS[c3ae2d155fa205969f59c36193b3f1a497a4cb67]:
+: With custom order:
+: red
+: blue
+: green
+: yellow
+
+*** Python 2 note
+In Python 2 the ~sorted~ function had the ~cmp~ parameter which took a
+comparison function as an alternative way to define a custom sorting
 order. This was removed in Python 3 as the ~key~ parameter is more beautiful
 and faster.
 
-* Call a function until a sentinel value
+** Call a function until a sentinel value
 #+BEGIN_SRC python :results output :exports both :cache yes
   import io
   buf = io.StringIO("string")
   chars = []
+
   while True:
       char = buf.read(1)
       if char == "":
           break
       chars.append(char)
+
   print(chars)
 #+END_SRC
 
 #+RESULTS[3ffb0a854886174655f84ee6d8746f44f2d16368]:
 : ['s', 't', 'r', 'i', 'n', 'g']
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   import io
   from functools import partial
   buf = io.StringIO("string")
   chars = []
+
   for char in iter(partial(buf.read, 1), ""):
       chars.append(char)
+
   print(chars)
 #+END_SRC
 
@@ -255,7 +355,7 @@ and faster.
 second is a sentinel value which, when encountered, terminates the iteration.
 #+END_NOTES
 
-* Distinguishing multiple exit points in loops
+** Distinguishing multiple exit points in loops
 #+BEGIN_SRC python :results output :exports both :cache yes
   def find(seq, target):
       found = False
@@ -276,7 +376,7 @@ second is a sentinel value which, when encountered, terminates the iteration.
 : 1
 : -1
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   def find(seq, target):
       for i, value in enumerate(seq):
@@ -300,7 +400,61 @@ In Python, ~for~ and ~while~ loops have an ~else~ which is executed when the
 iteration naturally comes to and end (not after a ~break~).
 #+END_NOTES
 
-* Looping over dictionary keys
+** List comprehensions
+#+BEGIN_SRC python :results output :exports both :cache yes
+  squares = []
+
+  for i in range(10):
+      if i % 3 == 0:
+          squares.append(i ** 2)
+
+  print(squares)
+#+END_SRC
+
+#+RESULTS[7d4fcc4f6e5e612a7dab896b3ef47cba659d8c44]:
+: [0, 9, 36, 81]
+
+*** Better
+#+BEGIN_SRC python :results output :exports both :cache yes
+  squares = [i ** 2 for i in range(10) if i % 3 == 0]
+
+  print(squares)
+#+END_SRC
+
+#+RESULTS[14df501717361cf637e9e9d95eb62590fe01482d]:
+: [0, 9, 36, 81]
+
+** Generator expressions
+#+BEGIN_SRC python :results output :exports both :cache yes
+  result = []
+
+  for i in range(10):
+      s = i ** 2
+      result.append(s)
+  print(sum(result))
+#+END_SRC
+
+#+RESULTS[72765012115bc53626895471a38c4a8a1955ebfd]:
+: 285
+
+*** Better
+#+BEGIN_SRC python :results output :exports both :cache yes
+  print(sum(i**2 for i in range(10)))
+#+END_SRC
+
+#+RESULTS[b702ac13ea1b513c64ed454461a8f8ae1ea69cda]:
+: 285
+
+#+BEGIN_NOTES
+The first way tells you what to do, the second way tells you what you want.
+
+Don't try to put too much on one line, but try not to break atoms of thought
+into subatomic particles. One logical line of code equals one sentence in
+English.
+#+END_NOTES
+
+* Dictionary skills
+** Looping over dictionary keys
 #+BEGIN_SRC python :results output :exports both :cache yes
   d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
 
@@ -322,18 +476,17 @@ iteration naturally comes to and end (not after a ~break~).
 
 #+BEGIN_NOTES
 Use the second version when you need to modify the dictionary in the loop.
+
+"If you mutate something while you're iterating over it, you're living in a
+state of sin and deserve whatever happens to you."
 #+END_NOTES
 
-** Python 2 note
+*** Python 2 note
 In Python 2, ~dict.keys()~ returned a copy of the dictionary keys. In Python 3
 it returns an iterator so ~list~ must be used to create the copy. You should
 never try to modify the collection that you are iterating over.
-#+BEGIN_QUOTE
-If you mutate something while you're iterating over it, you're living in a
-state of sin and deserve whatever happens to you.
-#+END_QUOTE
 
-* Looping over dictionary keys and values
+** Looping over dictionary keys and values
 #+BEGIN_SRC python :results output :exports both :cache yes
   d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
 
@@ -346,7 +499,7 @@ state of sin and deserve whatever happens to you.
 : rachel ---> green
 : raymond ---> red
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
 
@@ -364,11 +517,11 @@ The first solution has to rehash and do a lookup on every iteration. This way
 produces an iterator which is quicker.
 #+END_NOTES
 
-** Python 2 note
+*** Python 2 note
 In Python 2, ~dict.items()~ creates a list in memory and ~dict.iteritems()~
 exists which is equivalent to Python 3 ~dict.items()~.
 
-* Construct a dictionary from pairs
+** Construct a dictionary from pairs
 #+BEGIN_SRC python :results output :exports both :cache yes
   names = ['raymond', 'rachel', 'matthew']
   colors = ['red', 'green', 'blue']
@@ -380,7 +533,7 @@ exists which is equivalent to Python 3 ~dict.items()~.
 #+RESULTS[6347e604abaeea7cf7b2e5629c357dcf76169dd1]:
 : {'raymond': 'red', 'rachel': 'green', 'matthew': 'blue'}
 
-* Counting with dictionaries
+** Counting with dictionaries
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'red', 'blue', 'green', 'red']
 
@@ -396,7 +549,7 @@ exists which is equivalent to Python 3 ~dict.items()~.
 #+RESULTS[25459b41c262c5be74ab64413ac9f2852f718b43]:
 : {'red': 3, 'green': 2, 'blue': 1}
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   colors = ['red', 'green', 'red', 'blue', 'green', 'red']
 
@@ -410,10 +563,11 @@ exists which is equivalent to Python 3 ~dict.items()~.
 #+RESULTS[ae71c0a9a3020750b2a9c458ab9ffa87981433f6]:
 : {'red': 3, 'green': 2, 'blue': 1}
 
-#+REVEAL: split
+#+BEGIN_NOTES
+The ~get~ method doesn't throw an exception and can return a default.
+#+END_NOTES
 
-Another solution uses ~collections.defaultdict~. This does have several
-caveats and is better for advanced users who understand the intricacies.
+#+REVEAL: split
 
 #+BEGIN_SRC python :results output :exports both :cache yes
   import collections
@@ -429,7 +583,12 @@ caveats and is better for advanced users who understand the intricacies.
 #+RESULTS[87711fe0b683cfd8c971115f7c78446712818749]:
 : defaultdict(<class 'int'>, {'red': 3, 'green': 2, 'blue': 1})
 
-* Grouping with dictionaries
+#+BEGIN_NOTES
+Another solution uses ~collections.defaultdict~. This does have several
+caveats and is better for advanced users who understand the intricacies.
+#+END_NOTES
+
+** Grouping with dictionaries
 #+BEGIN_SRC python :results output :exports both :cache yes
   names = ['raymond', 'rachel', 'matthew', 'roger',
            'betty', 'melissa', 'judith', 'charlie']
@@ -448,7 +607,7 @@ caveats and is better for advanced users who understand the intricacies.
 #+RESULTS[a8bb0ade7d635529fc6307ef77a725d6b9df86d7]:
 : {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   names = ['raymond', 'rachel', 'matthew', 'roger',
            'betty', 'melissa', 'judith', 'charlie']
@@ -464,9 +623,11 @@ caveats and is better for advanced users who understand the intricacies.
 #+RESULTS[3cdb87630c79004119c109be57a83485531212c8]:
 : {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
 
-#+REVEAL: split
+#+BEGIN_NOTES
+The ~setdefault~ method inserts a default value if the key doesn't yet exist.
+#+END_NOTES
 
-Again with ~defaultdict~...
+#+REVEAL: split
 
 #+BEGIN_SRC python :results output :exports both :cache yes
   import collections
@@ -484,7 +645,11 @@ Again with ~defaultdict~...
 #+RESULTS[fdbc7034152be76e2226a48824090c532fa7a4dc]:
 : defaultdict(<class 'list'>, {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']})
 
-* Pop items from dictionary atomically
+#+BEGIN_NOTES
+Again with ~defaultdict~...
+#+END_NOTES
+
+** Pop items from dictionary atomically
 #+BEGIN_SRC python :results output :exports both :cache yes
   d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
 
@@ -501,10 +666,12 @@ Again with ~defaultdict~...
 : matthew --> blue
 : {}
 
+#+BEGIN_NOTES
 ~dict.popitem()~ is atomic so you don't have to put locks around it to use it
 in threads.
+#+END_NOTES
 
-* Linking dictionaries
+** Linking dictionaries
 #+BEGIN_NOTES
 This common approach allows you to use defaults at first, then override with
 environment variables and then finally with command line
@@ -531,7 +698,7 @@ arguments. Unfortunately, this copies data like crazy.
 #+RESULTS[7a4772507fda3f7ef88a00501c6cc8b1bb44d261]:
 : {'color': 'red', 'user': 'guest', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'XDG_MENU_PREFIX': 'gnome-', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'LANG': 'en_GB.UTF-8', 'DISPLAY': ':0', 'WORKON_HOME': '/home/vagrant/venvs', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'USERNAME': 'vagrant', 'XDG_VTNR': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'XDG_SESSION_ID': '1', 'USER': 'vagrant', 'DESKTOP_SESSION': 'ubuntu', 'QT4_IM_MODULE': 'xim', 'TEXTDOMAINDIR': '/usr/share/locale/', 'WAYLAND_DISPLAY': 'wayland-0', 'FTP_PROXY': '', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'HOME': '/home/vagrant', 'JOURNAL_STREAM': '9:18267', 'TEXTDOMAIN': 'im-config', 'XDG_SESSION_TYPE': 'wayland', 'https_proxy': 'http://10.0.2.2:3128/', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SESSION_DESKTOP': 'ubuntu', 'GJS_DEBUG_OUTPUT': 'stderr', 'PROJECT_HOME': '/home/vagrant/vmshared', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'IPY_TEST_SIMPLE_PROMPT': '1', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'SHELL': '/bin/bash', 'TERM': 'dumb', 'QT_IM_MODULE': 'xim', 'XMODIFIERS': '@im=ibus', 'IM_CONFIG_PHASE': '2', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'XDG_SEAT': 'seat0', 'SHLVL': '3', 'LANGUAGE': 'en_GB:en', 'GDMSESSION': 'ubuntu', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'LOGNAME': 'vagrant', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'ftp_proxy': '', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GTK_IM_MODULE': 'ibus'}
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   import os, argparse
   from collections import ChainMap
@@ -551,7 +718,7 @@ arguments. Unfortunately, this copies data like crazy.
 #+RESULTS[d829b073186c909ea30cdd5b52c13e4f05b4c091]:
 : {'WORKON_HOME': '/home/vagrant/venvs', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'XDG_VTNR': '1', 'SHELL': '/bin/bash', 'QT4_IM_MODULE': 'xim', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XDG_SESSION_TYPE': 'wayland', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'TERM': 'dumb', 'IM_CONFIG_PHASE': '2', 'USERNAME': 'vagrant', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'GTK_IM_MODULE': 'ibus', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SEAT': 'seat0', 'user': 'guest', 'GDMSESSION': 'ubuntu', 'TEXTDOMAINDIR': '/usr/share/locale/', 'JOURNAL_STREAM': '9:18267', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'DESKTOP_SESSION': 'ubuntu', 'LANGUAGE': 'en_GB:en', 'color': 'red', 'FTP_PROXY': '', 'XDG_SESSION_ID': '1', 'ftp_proxy': '', 'USER': 'vagrant', 'XDG_MENU_PREFIX': 'gnome-', 'WAYLAND_DISPLAY': 'wayland-0', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'GJS_DEBUG_OUTPUT': 'stderr', 'DISPLAY': ':0', 'SHLVL': '3', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'QT_IM_MODULE': 'xim', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'LOGNAME': 'vagrant', 'IPY_TEST_SIMPLE_PROMPT': '1', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'https_proxy': 'http://10.0.2.2:3128/', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'PROJECT_HOME': '/home/vagrant/vmshared', 'TEXTDOMAIN': 'im-config', 'XMODIFIERS': '@im=ibus', 'LANG': 'en_GB.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'HOME': '/home/vagrant'}
 
-** Python 2 note
+*** Python 2 note
 ~ChainMap~ was introduced in Python 3.3. There is a package on pypi for
 earlier versions of Python.
 
@@ -575,8 +742,10 @@ corresponds to how humans think
                  numtweets=20, popular=True)
 #+END_SRC
 
+#+BEGIN_NOTES
 This is slightly slower but is worth it for the code clarity and developer
 time savings.
+#+END_NOTES
 
 ** Clarify multiple return values with named tuples
 #+BEGIN_SRC python :results output :exports both :cache yes
@@ -589,7 +758,9 @@ time savings.
 #+RESULTS[d57024f67ec03e7638b454223820524892af926e]:
 : (0, 4)
 
+#+BEGIN_NOTES
 Is this rest result good or bad? It's not clear.
+#+END_NOTES
 
 *** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
@@ -606,7 +777,11 @@ Is this rest result good or bad? It's not clear.
 #+RESULTS[01c210300e933e4c4db024e56f068ad6b0033c3f]:
 : TestResult(failed=0, attempted=4)
 
-* Unpacking sequences
+#+BEGIN_NOTES
+Compatible with normal tuples.
+#+END_NOTES
+
+** Unpacking sequences
 #+BEGIN_SRC python :results output :exports both :cache yes
   p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
 
@@ -621,7 +796,7 @@ Is this rest result good or bad? It's not clear.
 #+RESULTS[06ec3a21176ffb2d1c5976cb992da95a7e60f795]:
 : Raymond Hettinger 48 python@example.com
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
 
@@ -633,9 +808,11 @@ Is this rest result good or bad? It's not clear.
 #+RESULTS[54933fe9ca1a2b4cf0bbd81feadc0ad1618ddcb2]:
 : Raymond Hettinger 48 python@example.com
 
+#+BEGIN_NOTES
 This is faster and more readable.
+#+END_NOTES
 
-* Updating multiple state variables
+** Updating multiple state variables
 #+BEGIN_SRC python :results output :exports both :cache yes
   def fibonacci(n):
       x = 0
@@ -662,7 +839,7 @@ This is faster and more readable.
 34
 #+end_example
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   def fibonacci(n):
       x, y = 0, 1
@@ -698,7 +875,7 @@ The second approach is more high level, doesn't risk getting the order wrong
 and is fast.
 #+END_NOTES
 
-* Simultaneous state updates
+** Simultaneous state updates
 #+BEGIN_SRC python :results output
   influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
 
@@ -712,7 +889,7 @@ and is fast.
   dy = tmp_dy
 #+END_SRC
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
 
@@ -723,8 +900,10 @@ and is fast.
 #+END_SRC
 
 * Efficiency
+#+BEGIN_NOTES
 Don't move data around unnecessarily. It takes only a little care to avoid
 quadratic behaviour in many cases.
+#+END_NOTES
 
 ** Concatenating strings
 #+BEGIN_SRC python :results output :exports both :cache yes
@@ -783,7 +962,8 @@ quadratic behaviour in many cases.
 #+RESULTS[4d241585e8bb12b70ca1d8e73827d525609fbdf2]:
 : ['mark', 'matthew', 'roger', 'betty', 'melissa', 'judith', 'charlie']
 
-* Using decorators to factor out administrative logic
+* Decorators and context managers
+** Using decorators to factor out administrative logic
 #+BEGIN_SRC python :results output
   def web_lookup(url, saved={}):
       if url in saved:
@@ -793,7 +973,7 @@ quadratic behaviour in many cases.
       return page
 #+END_SRC
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   import functools
 
@@ -802,7 +982,7 @@ quadratic behaviour in many cases.
       return urllib.urlopen(url).read()
 #+END_SRC
 
-* Factor out temporary contexts
+** Factor out temporary contexts
 #+BEGIN_SRC python :results output :exports both :cache yes
   from decimal import Decimal, getcontext, setcontext
 
@@ -815,7 +995,7 @@ quadratic behaviour in many cases.
 #+RESULTS[5d974b2cec2851cee2e9776da8b34d14c6a8d3d4]:
 : 3.1415929203539823008849557522123893805309734513274
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   from decimal import Decimal, Context, localcontext
 
@@ -826,7 +1006,7 @@ quadratic behaviour in many cases.
 #+RESULTS[d56ae8ef930e7ecfb083c26feb61a52f7b9c8b57]:
 : 3.1415929203539823008849557522123893805309734513274
 
-* Opening and closing files
+** Opening and closing files
 #+BEGIN_SRC python :results output :exports both :cache yes
   f = open('README.org')
   try:
@@ -841,7 +1021,7 @@ quadratic behaviour in many cases.
 : #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
 : 
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output :exports both :cache yes
   with open("README.org") as f:
       firstline = next(f)
@@ -853,7 +1033,7 @@ quadratic behaviour in many cases.
 : #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
 : 
 
-* Using locks
+** Using locks
 #+BEGIN_SRC python :results output
   import threading
 
@@ -867,7 +1047,7 @@ quadratic behaviour in many cases.
       lock.release()
 #+END_SRC
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   import threading
 
@@ -878,9 +1058,8 @@ quadratic behaviour in many cases.
       print('Critical section 2')
 #+END_SRC
 
-* Custom context managers
-
-** Ignoring exceptions
+** Custom context managers
+*** Ignoring exceptions
 #+BEGIN_SRC python :results output
   import os
   try:
@@ -889,13 +1068,20 @@ quadratic behaviour in many cases.
       pass
 #+END_SRC
 
-*** Better
+#+BEGIN_NOTES
+Don't check file exists then remove. Then you get a race condition.
+#+END_NOTES
+
+#+REVEAL: split
+
 #+BEGIN_SRC python :results output
   import os
   from contextlib import suppress
   with suppress(OSError):
       os.remove('somefile.tmp')
 #+END_SRC
+
+#+REVEAL: split
 
 ~contextlib.suppress~ is included in Python 3.4 and later. In earlier versions
 it can be implemented as:
@@ -909,7 +1095,7 @@ it can be implemented as:
           pass
 #+END_SRC
 
-** Output redirection
+*** Output redirection
 #+BEGIN_SRC python :results output
   import sys
   with open('help.txt', 'w') as f:
@@ -921,13 +1107,16 @@ it can be implemented as:
           sys.stdout = oldstdout
 #+END_SRC
 
-*** Better
+#+REVEAL: split
+
 #+BEGIN_SRC python :results output
   from contextlib import redirect_stdout
   with open('help.txt', 'w') as f:
       with redirect_stdout(f):
           help(pow)
 #+END_SRC
+
+#+REVEAL: split
 
 ~contextlib.redirect_stdout~ is included since Python 3.4. In earlier versions
 use:
@@ -944,32 +1133,8 @@ use:
           sys.stdout = oldstdout
 #+END_SRC
 
-* Concise, expressive one-liners
-Don't try to put too much on one line, but try not to break atoms of thought
-into subatomic particles. One logical line of code equals one sentence in
-English.
-#+BEGIN_SRC python :results output :exports both :cache yes
-  result = []
-  for i in range(10):
-      s = i ** 2
-      result.append(s)
-  print(sum(result))
-#+END_SRC
-
-#+RESULTS[72765012115bc53626895471a38c4a8a1955ebfd]:
-: 285
-
-** Better
-#+BEGIN_SRC python :results output :exports both :cache yes
-  print(sum(i**2 for i in range(10)))
-#+END_SRC
-
-#+RESULTS[b702ac13ea1b513c64ed454461a8f8ae1ea69cda]:
-: 285
-
-The first way tells you what to do, the second way tells you what you want.
-
-* Class properties
+* Miscellaneous
+** Class properties
 #+BEGIN_SRC python :results output
   class Widget():
       def __init__(self, width, position):
@@ -983,7 +1148,7 @@ The first way tells you what to do, the second way tells you what you want.
 #+RESULTS:
 : 1000 200
 
-** Getter and setter
+*** Getter and setter
 #+BEGIN_SRC python :results output
   class Widget():
       def __init__(self, width, position):
@@ -1015,7 +1180,7 @@ The first way tells you what to do, the second way tells you what you want.
 #+RESULTS:
 : 1000 1000
 
-** Better
+*** Better
 #+BEGIN_SRC python :results output
   class Widget():
       def __init__(self, width, position):
