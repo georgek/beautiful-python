@@ -64,13 +64,12 @@
 #+LATEX_HEADER:
 
 #+BEGIN_NOTES
-Notes from Raymond Hettinger's talk at pycon US 2013 [[https://www.youtube.com/watch?v=OSGv2VnC0go][video]] [[https://speakerdeck.com/pyconslides/transforming-code-into-beautiful-idiomatic-python-by-raymond-hettinger-1][slides]]
-
 This is based on a transcript of Raymond's talk by Jeff Paine. I've updated
-it to purely Python 3 and added notes about Python 2 where necessary. It's
-also written in org-mode which means you could actually run the code here.
+it to purely Python 3, added notes about Python 2 where necessary, and added
+some of my own examples.
 
-It's also designed to be easily exported as a slideshow with [[https://github.com/yjwen/org-reveal/][ox-reveal]].
+It's also written in org-mode which means you could actually run the code here
+and designed to be easily exported as a slideshow with [[https://github.com/yjwen/org-reveal/][ox-reveal]].
 #+END_NOTES
 
 * Pythonic?
@@ -1282,3 +1281,4 @@ use:
 : 1000 1000
 
 * End
+You can find the original talk and slides here: [[https://www.youtube.com/watch?v=OSGv2VnC0go][video]] [[https://speakerdeck.com/pyconslides/transforming-code-into-beautiful-idiomatic-python-by-raymond-hettinger-1][slides]]
