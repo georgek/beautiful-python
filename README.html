@@ -1,0 +1,2175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Writing code the Pythonic way</title>
+<!-- 2018-04-04 Wed 13:54 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Org-mode">
+<meta name="author" content="gk">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/syntax.css" rel="stylesheet">
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<style type="text/css">
+/* org mode styles on top of twbs */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-size: 18px;
+    margin-bottom: 105px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 101px;
+    background-color: #f5f5f5;
+}
+
+footer > div {
+    padding: 10px;
+}
+
+footer p {
+    margin: 0 0 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#table-of-contents {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+blockquote p {
+    font-size: 18px;
+}
+
+pre {
+    font-size: 16px;
+}
+
+.footpara {
+    display: inline-block;
+}
+
+figcaption {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  padding-bottom: 15px;
+}
+
+/* from twbs docs */
+
+.bs-docs-sidebar.affix {
+    position: static;
+}
+@media (min-width: 768px) {
+    .bs-docs-sidebar {
+        padding-left: 20px;
+    }
+}
+
+/* All levels of nav */
+.bs-docs-sidebar .nav > li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+}
+.bs-docs-sidebar .nav > li > a:hover,
+.bs-docs-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: #A1283B;
+    text-decoration: none;
+    background-color: transparent;
+    border-left: 1px solid #A1283B;
+}
+.bs-docs-sidebar .nav > .active > a,
+.bs-docs-sidebar .nav > .active:hover > a,
+.bs-docs-sidebar .nav > .active:focus > a {
+    padding-left: 18px;
+    font-weight: bold;
+    color: #A1283B;
+    background-color: transparent;
+    border-left: 2px solid #A1283B;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-docs-sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav > li > a:focus {
+    padding-left: 29px;
+}
+.bs-docs-sidebar .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav > .active:focus > a {
+    padding-left: 28px;
+    font-weight: 500;
+}
+
+/* Nav: third level (shown on .active) */
+.bs-docs-sidebar .nav .nav .nav {
+    padding-bottom: 10px;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.bs-docs-sidebar .nav .nav .nav > li > a:hover,
+.bs-docs-sidebar .nav .nav .nav > li > a:focus {
+    padding-left: 39px;
+}
+.bs-docs-sidebar .nav .nav .nav > .active > a,
+.bs-docs-sidebar .nav .nav .nav > .active:hover > a,
+.bs-docs-sidebar .nav .nav .nav > .active:focus > a {
+    padding-left: 38px;
+    font-weight: 500;
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: 992px) {
+    .bs-docs-sidebar .nav > .active > ul {
+        display: block;
+    }
+    /* Widen the fixed sidebar */
+    .bs-docs-sidebar.affix,
+    .bs-docs-sidebar.affix-bottom {
+        width: 213px;
+    }
+    .bs-docs-sidebar.affix {
+        position: fixed; /* Undo the static from mobile first approach */
+        top: 20px;
+    }
+    .bs-docs-sidebar.affix-bottom {
+        position: absolute; /* Undo the static from mobile first approach */
+    }
+    .bs-docs-sidebar.affix .bs-docs-sidenav,.bs-docs-sidebar.affix-bottom .bs-docs-sidenav {
+        margin-top: 0;
+        margin-bottom: 0
+    }
+}
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .bs-docs-sidebar.affix-bottom,
+    .bs-docs-sidebar.affix {
+        width: 263px;
+    }
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    'use strict';
+
+    $('.bs-docs-sidebar li').first().addClass('active');
+
+    $(document.body).scrollspy({target: '.bs-docs-sidebar'});
+
+    $('.bs-docs-sidebar').affix();
+});
+</script>
+</head>
+<body>
+<div id="content" class="container">
+<div class="row"><div class="col-md-9"><h1 class="title">Writing code the Pythonic way</h1>
+<div class="notes">
+<p>
+Notes from Raymond Hettinger's talk at pycon US 2013 <a href="https://www.youtube.com/watch?v=OSGv2VnC0go">video</a> <a href="https://speakerdeck.com/pyconslides/transforming-code-into-beautiful-idiomatic-python-by-raymond-hettinger-1">slides</a>
+</p>
+
+<p>
+This is based on a transcript of Raymond's talk by Jeff Paine. I've updated
+it to purely Python 3 and added notes about Python 2 where necessary. It's
+also written in org-mode which means you could actually run the code here.
+</p>
+
+<p>
+It's also designed to be easily exported as a slideshow with <a href="https://github.com/yjwen/org-reveal/">ox-reveal</a>.
+</p>
+
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Pythonic?</h2>
+<div class="outline-text-2" id="text-1">
+<div class="notes">
+<p>
+Pythonic is a word specific to Python but what we're really talking about is
+idiomatic usage.  All programming languages, and indeed all languages, have a
+concept of idiomatic usage.  Consider English&#x2026;
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Speak you English?</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="notes">
+<p>
+This question uses English words and correct English grammar, but a native
+English speaker will have to pause for a second at the awkward question. It's
+not idiomatic English.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> What am I?</h3>
+<div class="outline-text-3" id="text-1-2">
+<blockquote>
+<p>
+I am programmer.
+</p>
+</blockquote>
+
+<div class="notes">
+<p>
+A French or Spanish speaker might form the above sentence because that is
+idiomatic in <i>their</i> language, but it is not idiomatic in English.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<blockquote>
+<p>
+I am a programmer.
+</p>
+</blockquote>
+
+<div class="notes">
+<p>
+Here is the correct English. The rest of the talk will follow showing common
+but non-idiomatic Python followed by the proper idiomatic Pythonic way.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Idiomatic usage</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="notes">
+<p>
+Idiomatic code will be:
+</p>
+
+</div>
+<ul class="org-ul">
+<li>More readable,
+</li>
+<li>More beautiful,
+</li>
+<li>Faster.
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Iterating</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Looping over a range of numbers</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">for</span> i <span class="org-keyword">in</span> [0,1,2,3,4,5]:
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(i**2)
+</pre>
+</div>
+
+<pre class="example">
+0
+1
+4
+9
+16
+25
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(6):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(i**2)
+</pre>
+</div>
+
+<pre class="example">
+0
+1
+4
+9
+16
+25
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+In Python 2 the <code>range</code> function constructs a real list in memory and returns
+it. In Python 3 <code>range</code> creates an iterator which produces the values one at a
+time which is quicker and saves memory. The old is achieved with
+<code>list(range(n))</code> in Python 3.
+</p>
+
+<p>
+In Python 2 the <code>xrange</code> function exists to create an iterator instead of a
+list and is equivalent to <code>range</code> in Python 3.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Looping over a collection</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(colors)):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(colors[i])
+</pre>
+</div>
+
+<pre class="example">
+red
+green
+blue
+yellow
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> colors:
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+
+<pre class="example">
+red
+green
+blue
+yellow
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Looping backwards</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(colors)-1, -1, -1):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(colors[i])
+</pre>
+</div>
+
+<pre class="example">
+yellow
+blue
+green
+red
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> <span class="org-builtin">reversed</span>(colors):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Looping over a collection and indices</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(colors)):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(i, <span class="org-string">'---&gt;'</span>, colors[i])
+</pre>
+</div>
+
+<pre class="example">
+0 ---&gt; red
+1 ---&gt; green
+2 ---&gt; blue
+3 ---&gt; yellow
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> i, color <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>(colors):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(i, <span class="org-string">'---&gt;'</span>, color)
+</pre>
+</div>
+
+<div class="notes">
+<p>
+"It's fast and beautiful and saves you from tracking the individual indices
+and incrementing them."
+</p>
+
+<p>
+"Whenever you find yourself manipulating indices [in a collection], you're
+probably doing it wrong."
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Looping over two collections</h3>
+<div class="outline-text-3" id="text-2-5">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>]
+<span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-variable-name">n</span> = <span class="org-builtin">min</span>(<span class="org-builtin">len</span>(names), <span class="org-builtin">len</span>(colors))
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(names[i], <span class="org-string">'---&gt;'</span>, colors[i])
+</pre>
+</div>
+
+<pre class="example">
+raymond ---&gt; red
+rachel ---&gt; green
+matthew ---&gt; blue
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-5-1" class="outline-4">
+<h4 id="sec-2-5-1"><span class="section-number-4">2.5.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>]
+<span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">for</span> name, color <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(names, colors):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(name, <span class="org-string">'---&gt;'</span>, color)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-2" class="outline-4">
+<h4 id="sec-2-5-2"><span class="section-number-4">2.5.2</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+In Python 2, <code>zip</code> creates a new list in memory. <code>izip</code> instead creates an
+iterator which is more efficient and equivalent to <code>zip</code> in Python 3.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> Looping in sorted order</h3>
+<div class="outline-text-3" id="text-2-6">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">print</span>(<span class="org-string">"Forward sorted order:"</span>)
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> <span class="org-builtin">sorted</span>(colors):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+
+<pre class="example">
+Forward sorted order:
+blue
+green
+red
+yellow
+
+</pre>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">print</span>(<span class="org-string">"Backwards sorted order:"</span>)
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> <span class="org-builtin">sorted</span>(colors, reverse=<span class="org-constant">True</span>):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+
+<pre class="example">
+Backwards sorted order:
+yellow
+red
+green
+blue
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> Custom sort order</h3>
+<div class="outline-text-3" id="text-2-7">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">def</span> <span class="org-function-name">compare_length</span>(l1, l2):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> <span class="org-builtin">len</span>(l1) &lt; <span class="org-builtin">len</span>(l2): <span class="org-keyword">return</span> -1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> <span class="org-builtin">len</span>(l1) &gt; <span class="org-builtin">len</span>(l2): <span class="org-keyword">return</span> 1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> 0
+
+<span class="org-keyword">print</span>(<span class="org-string">"With custom order:"</span>)
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> <span class="org-builtin">sorted</span>(colors, <span class="org-builtin">cmp</span>=compare_length):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'yellow'</span>]
+
+<span class="org-keyword">print</span>(<span class="org-string">"With custom order:"</span>)
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> <span class="org-builtin">sorted</span>(colors, key=<span class="org-builtin">len</span>):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(color)
+</pre>
+</div>
+
+<pre class="example">
+With custom order:
+red
+blue
+green
+yellow
+
+</pre>
+
+<div class="notes">
+<p>
+Key is similar to ordering by a function in SQL.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-2-7-1" class="outline-4">
+<h4 id="sec-2-7-1"><span class="section-number-4">2.7.1</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<p>
+In Python 2 the <code>sorted</code> function had the <code>cmp</code> parameter which took a
+comparison function as an alternative way to define a custom sorting
+order. This was removed in Python 3 as the <code>key</code> parameter is more beautiful
+and faster.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> Call a function until a sentinel value</h3>
+<div class="outline-text-3" id="text-2-8">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> io
+<span class="org-variable-name">buf</span> = io.StringIO(<span class="org-string">"string"</span>)
+<span class="org-variable-name">chars</span> = []
+
+<span class="org-keyword">while</span> <span class="org-constant">True</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">char</span> = buf.read(1)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> char == <span class="org-string">""</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">break</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   chars.append(char)
+
+<span class="org-keyword">print</span>(chars)
+</pre>
+</div>
+
+<pre class="example">
+['s', 't', 'r', 'i', 'n', 'g']
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-8-1" class="outline-4">
+<h4 id="sec-2-8-1"><span class="section-number-4">2.8.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-8-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> io
+<span class="org-keyword">from</span> functools <span class="org-keyword">import</span> partial
+<span class="org-variable-name">buf</span> = io.StringIO(<span class="org-string">"string"</span>)
+<span class="org-variable-name">chars</span> = []
+
+<span class="org-keyword">for</span> char <span class="org-keyword">in</span> <span class="org-builtin">iter</span>(partial(buf.read, 1), <span class="org-string">""</span>):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   chars.append(char)
+
+<span class="org-keyword">print</span>(chars)
+</pre>
+</div>
+
+<pre class="example">
+['s', 't', 'r', 'i', 'n', 'g']
+
+</pre>
+
+<div class="notes">
+<p>
+<code>iter</code> takes two arguments. The first you call over and over again and the
+second is a sentinel value which, when encountered, terminates the iteration.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9" class="outline-3">
+<h3 id="sec-2-9"><span class="section-number-3">2.9</span> Distinguishing multiple exit points in loops</h3>
+<div class="outline-text-3" id="text-2-9">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">find</span>(seq, target):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">found</span> = <span class="org-constant">False</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">for</span> i, value <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>(seq):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> value == target:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">found</span> = <span class="org-constant">True</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">break</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> <span class="org-keyword">not</span> found:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> -1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> i
+
+<span class="org-variable-name">seq</span> = [1,3,4]
+<span class="org-keyword">print</span>(find(seq, 3))
+<span class="org-keyword">print</span>(find(seq, 2))
+</pre>
+</div>
+
+<pre class="example">
+1
+-1
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-9-1" class="outline-4">
+<h4 id="sec-2-9-1"><span class="section-number-4">2.9.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">find</span>(seq, target):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">for</span> i, value <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>(seq):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> value == target:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">break</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">else</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> -1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> i
+
+<span class="org-variable-name">seq</span> = [1,3,4]
+<span class="org-keyword">print</span>(find(seq, 3))
+<span class="org-keyword">print</span>(find(seq, 2))
+</pre>
+</div>
+
+<pre class="example">
+1
+-1
+
+</pre>
+
+<div class="notes">
+<p>
+In Python, <code>for</code> and <code>while</code> loops have an <code>else</code> which is executed when the
+iteration naturally comes to and end (not after a <code>break</code>).
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-10" class="outline-3">
+<h3 id="sec-2-10"><span class="section-number-3">2.10</span> List comprehensions</h3>
+<div class="outline-text-3" id="text-2-10">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">squares</span> = []
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(10):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> i % 3 == 0:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   squares.append(i ** 2)
+
+<span class="org-keyword">print</span>(squares)
+</pre>
+</div>
+
+<pre class="example">
+[0, 9, 36, 81]
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-10-1" class="outline-4">
+<h4 id="sec-2-10-1"><span class="section-number-4">2.10.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-10-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">squares</span> = [i ** 2 <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(10) <span class="org-keyword">if</span> i % 3 == 0]
+
+<span class="org-keyword">print</span>(squares)
+</pre>
+</div>
+
+<pre class="example">
+[0, 9, 36, 81]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-11" class="outline-3">
+<h3 id="sec-2-11"><span class="section-number-3">2.11</span> Generator expressions</h3>
+<div class="outline-text-3" id="text-2-11">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">result</span> = []
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(10):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">s</span> = i ** 2
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   result.append(s)
+<span class="org-keyword">print</span>(<span class="org-builtin">sum</span>(result))
+</pre>
+</div>
+
+<pre class="example">
+285
+
+</pre>
+</div>
+
+<div id="outline-container-sec-2-11-1" class="outline-4">
+<h4 id="sec-2-11-1"><span class="section-number-4">2.11.1</span> Better</h4>
+<div class="outline-text-4" id="text-2-11-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">print</span>(<span class="org-builtin">sum</span>(i**2 <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(10)))
+</pre>
+</div>
+
+<pre class="example">
+285
+
+</pre>
+
+<div class="notes">
+<p>
+The first way tells you what to do, the second way tells you what you want.
+</p>
+
+<p>
+Don't try to put too much on one line, but try not to break atoms of thought
+into subatomic particles. One logical line of code equals one sentence in
+English.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Dictionary skills</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Looping over dictionary keys</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">d</span> = {<span class="org-string">'matthew'</span>: <span class="org-string">'blue'</span>, <span class="org-string">'rachel'</span>: <span class="org-string">'green'</span>, <span class="org-string">'raymond'</span>: <span class="org-string">'red'</span>}
+
+<span class="org-keyword">for</span> k <span class="org-keyword">in</span> d:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(k)
+
+<span class="org-keyword">for</span> k <span class="org-keyword">in</span> <span class="org-builtin">list</span>(d.keys()):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> k.startswith(<span class="org-string">'r'</span>):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">del</span> d[k]
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+matthew
+rachel
+raymond
+{'matthew': 'blue'}
+
+</pre>
+
+<div class="notes">
+<p>
+Use the second version when you need to modify the dictionary in the loop.
+</p>
+
+<p>
+"If you mutate something while you're iterating over it, you're living in a
+state of sin and deserve whatever happens to you."
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+In Python 2, <code>dict.keys()</code> returned a copy of the dictionary keys. In Python 3
+it returns an iterator so <code>list</code> must be used to create the copy. You should
+never try to modify the collection that you are iterating over.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Looping over dictionary keys and values</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">d</span> = {<span class="org-string">'matthew'</span>: <span class="org-string">'blue'</span>, <span class="org-string">'rachel'</span>: <span class="org-string">'green'</span>, <span class="org-string">'raymond'</span>: <span class="org-string">'red'</span>}
+
+<span class="org-keyword">for</span> k <span class="org-keyword">in</span> d:
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(k, <span class="org-string">'---&gt;'</span>, d[k])
+</pre>
+</div>
+
+<pre class="example">
+matthew ---&gt; blue
+rachel ---&gt; green
+raymond ---&gt; red
+
+</pre>
+</div>
+
+<div id="outline-container-sec-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">d</span> = {<span class="org-string">'matthew'</span>: <span class="org-string">'blue'</span>, <span class="org-string">'rachel'</span>: <span class="org-string">'green'</span>, <span class="org-string">'raymond'</span>: <span class="org-string">'red'</span>}
+
+<span class="org-keyword">for</span> k, v <span class="org-keyword">in</span> d.items():
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(k, <span class="org-string">'---&gt;'</span>, v)
+</pre>
+</div>
+
+<pre class="example">
+matthew ---&gt; blue
+rachel ---&gt; green
+raymond ---&gt; red
+
+</pre>
+
+<div class="notes">
+<p>
+The first solution has to rehash and do a lookup on every iteration. This way
+produces an iterator which is quicker.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2-2" class="outline-4">
+<h4 id="sec-3-2-2"><span class="section-number-4">3.2.2</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+In Python 2, <code>dict.items()</code> creates a list in memory and <code>dict.iteritems()</code>
+exists which is equivalent to Python 3 <code>dict.items()</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Construct a dictionary from pairs</h3>
+<div class="outline-text-3" id="text-3-3">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>]
+<span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'blue'</span>]
+
+<span class="org-variable-name">d</span> = <span class="org-builtin">dict</span>(<span class="org-builtin">zip</span>(names, colors))
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{'raymond': 'red', 'rachel': 'green', 'matthew': 'blue'}
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Counting with dictionaries</h3>
+<div class="outline-text-3" id="text-3-4">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>]
+
+<span class="org-variable-name">d</span> = {}
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> colors:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> color <span class="org-keyword">not</span> <span class="org-keyword">in</span> d:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">d</span>[color] = 0
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">d</span>[color] += 1
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{'red': 3, 'green': 2, 'blue': 1}
+
+</pre>
+</div>
+
+<div id="outline-container-sec-3-4-1" class="outline-4">
+<h4 id="sec-3-4-1"><span class="section-number-4">3.4.1</span> Better</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>]
+
+<span class="org-variable-name">d</span> = {}
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> colors:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">d</span>[color] = d.get(color, 0) + 1
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{'red': 3, 'green': 2, 'blue': 1}
+
+</pre>
+
+<div class="notes">
+<p>
+The <code>get</code> method doesn't throw an exception and can return a default.
+</p>
+
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> collections
+<span class="org-variable-name">colors</span> = [<span class="org-string">'red'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>, <span class="org-string">'blue'</span>, <span class="org-string">'green'</span>, <span class="org-string">'red'</span>]
+
+<span class="org-variable-name">d</span> = collections.defaultdict(<span class="org-builtin">int</span>)
+<span class="org-keyword">for</span> color <span class="org-keyword">in</span> colors:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">d</span>[color] += 1
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+defaultdict(&lt;class 'int'&gt;, {'red': 3, 'green': 2, 'blue': 1})
+
+</pre>
+
+<div class="notes">
+<p>
+Another solution uses <code>collections.defaultdict</code>. This does have several
+caveats and is better for advanced users who understand the intricacies.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> Grouping with dictionaries</h3>
+<div class="outline-text-3" id="text-3-5">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">group by name length</span>
+<span class="org-variable-name">d</span> = {}
+<span class="org-keyword">for</span> name <span class="org-keyword">in</span> names:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">key</span> = <span class="org-builtin">len</span>(name)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> key <span class="org-keyword">not</span> <span class="org-keyword">in</span> d:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">d</span>[key] = []
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   d[key].append(name)
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
+
+</pre>
+</div>
+
+<div id="outline-container-sec-3-5-1" class="outline-4">
+<h4 id="sec-3-5-1"><span class="section-number-4">3.5.1</span> Better</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-variable-name">d</span> = {}
+<span class="org-keyword">for</span> name <span class="org-keyword">in</span> names:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">key</span> = <span class="org-builtin">len</span>(name)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   d.setdefault(key, []).append(name)
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
+
+</pre>
+
+<div class="notes">
+<p>
+The <code>setdefault</code> method inserts a default value if the key doesn't yet exist.
+</p>
+
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> collections
+<span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-variable-name">d</span> = collections.defaultdict(<span class="org-builtin">list</span>)
+<span class="org-keyword">for</span> name <span class="org-keyword">in</span> names:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">key</span> = <span class="org-builtin">len</span>(name)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   d[key].append(name)
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+defaultdict(&lt;class 'list'&gt;, {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']})
+
+</pre>
+
+<div class="notes">
+<p>
+Again with <code>defaultdict</code>&#x2026;
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> Pop items from dictionary atomically</h3>
+<div class="outline-text-3" id="text-3-6">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">d</span> = {<span class="org-string">'matthew'</span>: <span class="org-string">'blue'</span>, <span class="org-string">'rachel'</span>: <span class="org-string">'green'</span>, <span class="org-string">'raymond'</span>: <span class="org-string">'red'</span>}
+
+<span class="org-keyword">while</span> d:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">key</span>, <span class="org-variable-name">value</span> = d.popitem()
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(key, <span class="org-string">'--&gt;'</span>, value)
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+raymond --&gt; red
+rachel --&gt; green
+matthew --&gt; blue
+{}
+
+</pre>
+
+<div class="notes">
+<p>
+<code>dict.popitem()</code> is atomic so you don't have to put locks around it to use it
+in threads.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> Linking dictionaries</h3>
+<div class="outline-text-3" id="text-3-7">
+<div class="notes">
+<p>
+This common approach allows you to use defaults at first, then override with
+environment variables and then finally with command line
+arguments. Unfortunately, this copies data like crazy.
+</p>
+
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> os, argparse
+
+<span class="org-variable-name">defaults</span> = {<span class="org-string">'color'</span>: <span class="org-string">'red'</span>, <span class="org-string">'user'</span>: <span class="org-string">'guest'</span>}
+<span class="org-variable-name">parser</span> = argparse.ArgumentParser()
+parser.add_argument(<span class="org-string">'-u'</span>, <span class="org-string">'--user'</span>)
+parser.add_argument(<span class="org-string">'-c'</span>, <span class="org-string">'--color'</span>)
+<span class="org-variable-name">namespace</span> = parser.parse_args([])
+<span class="org-variable-name">command_line_args</span> = {k:v <span class="org-keyword">for</span> k, v <span class="org-keyword">in</span> <span class="org-builtin">vars</span>(namespace).items() <span class="org-keyword">if</span> v}
+
+<span class="org-variable-name">d</span> = defaults.copy()
+d.update(os.environ)
+d.update(command_line_args)
+
+<span class="org-keyword">print</span>(d)
+</pre>
+</div>
+
+<pre class="example">
+{'color': 'red', 'user': 'guest', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'XDG_MENU_PREFIX': 'gnome-', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'LANG': 'en_GB.UTF-8', 'DISPLAY': ':0', 'WORKON_HOME': '/home/vagrant/venvs', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'USERNAME': 'vagrant', 'XDG_VTNR': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'XDG_SESSION_ID': '1', 'USER': 'vagrant', 'DESKTOP_SESSION': 'ubuntu', 'QT4_IM_MODULE': 'xim', 'TEXTDOMAINDIR': '/usr/share/locale/', 'WAYLAND_DISPLAY': 'wayland-0', 'FTP_PROXY': '', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'HOME': '/home/vagrant', 'JOURNAL_STREAM': '9:18267', 'TEXTDOMAIN': 'im-config', 'XDG_SESSION_TYPE': 'wayland', 'https_proxy': 'http://10.0.2.2:3128/', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SESSION_DESKTOP': 'ubuntu', 'GJS_DEBUG_OUTPUT': 'stderr', 'PROJECT_HOME': '/home/vagrant/vmshared', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'IPY_TEST_SIMPLE_PROMPT': '1', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'SHELL': '/bin/bash', 'TERM': 'dumb', 'QT_IM_MODULE': 'xim', 'XMODIFIERS': '@im=ibus', 'IM_CONFIG_PHASE': '2', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'XDG_SEAT': 'seat0', 'SHLVL': '3', 'LANGUAGE': 'en_GB:en', 'GDMSESSION': 'ubuntu', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'LOGNAME': 'vagrant', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'ftp_proxy': '', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GTK_IM_MODULE': 'ibus'}
+
+</pre>
+</div>
+
+<div id="outline-container-sec-3-7-1" class="outline-4">
+<h4 id="sec-3-7-1"><span class="section-number-4">3.7.1</span> Better</h4>
+<div class="outline-text-4" id="text-3-7-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> os, argparse
+<span class="org-keyword">from</span> collections <span class="org-keyword">import</span> ChainMap
+
+<span class="org-variable-name">defaults</span> = {<span class="org-string">'color'</span>: <span class="org-string">'red'</span>, <span class="org-string">'user'</span>: <span class="org-string">'guest'</span>}
+<span class="org-variable-name">parser</span> = argparse.ArgumentParser()
+parser.add_argument(<span class="org-string">'-u'</span>, <span class="org-string">'--user'</span>)
+parser.add_argument(<span class="org-string">'-c'</span>, <span class="org-string">'--color'</span>)
+<span class="org-variable-name">namespace</span> = parser.parse_args([])
+<span class="org-variable-name">command_line_args</span> = {k:v <span class="org-keyword">for</span> k, v <span class="org-keyword">in</span> <span class="org-builtin">vars</span>(namespace).items() <span class="org-keyword">if</span> v}
+
+<span class="org-variable-name">d</span> = ChainMap(command_line_args, os.environ, defaults)
+
+<span class="org-keyword">print</span>(<span class="org-builtin">dict</span>(d))
+</pre>
+</div>
+
+<pre class="example">
+{'WORKON_HOME': '/home/vagrant/venvs', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'XDG_VTNR': '1', 'SHELL': '/bin/bash', 'QT4_IM_MODULE': 'xim', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XDG_SESSION_TYPE': 'wayland', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'TERM': 'dumb', 'IM_CONFIG_PHASE': '2', 'USERNAME': 'vagrant', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'GTK_IM_MODULE': 'ibus', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SEAT': 'seat0', 'user': 'guest', 'GDMSESSION': 'ubuntu', 'TEXTDOMAINDIR': '/usr/share/locale/', 'JOURNAL_STREAM': '9:18267', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'DESKTOP_SESSION': 'ubuntu', 'LANGUAGE': 'en_GB:en', 'color': 'red', 'FTP_PROXY': '', 'XDG_SESSION_ID': '1', 'ftp_proxy': '', 'USER': 'vagrant', 'XDG_MENU_PREFIX': 'gnome-', 'WAYLAND_DISPLAY': 'wayland-0', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'GJS_DEBUG_OUTPUT': 'stderr', 'DISPLAY': ':0', 'SHLVL': '3', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'QT_IM_MODULE': 'xim', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'LOGNAME': 'vagrant', 'IPY_TEST_SIMPLE_PROMPT': '1', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'https_proxy': 'http://10.0.2.2:3128/', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'PROJECT_HOME': '/home/vagrant/vmshared', 'TEXTDOMAIN': 'im-config', 'XMODIFIERS': '@im=ibus', 'LANG': 'en_GB.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'HOME': '/home/vagrant'}
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3-7-2" class="outline-4">
+<h4 id="sec-3-7-2"><span class="section-number-4">3.7.2</span> Python 2 note</h4>
+<div class="outline-text-4" id="text-3-7-2">
+<p>
+<code>ChainMap</code> was introduced in Python 3.3. There is a package on pypi for
+earlier versions of Python.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Improving clarity</h2>
+<div class="outline-text-2" id="text-4">
+<div class="notes">
+<p>
+Positional arguments and indices work, but keyword arguments and names are
+better. The first way is convenient for the computer, but the second
+corresponds to how humans think
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Clarify function calls with keyword arguments</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">twitter_search</span> = <span class="org-keyword">lambda</span> *args: <span class="org-constant">False</span>
+twitter_search(<span class="org-string">'@obama'</span>, <span class="org-constant">False</span>, 20, <span class="org-constant">True</span>)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> Better</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">twitter_search</span> = <span class="org-keyword">lambda</span> *args, **kwargs: <span class="org-constant">False</span>
+twitter_search(<span class="org-string">'@obama'</span>, retweets=<span class="org-constant">False</span>,
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>  numtweets=20, popular=<span class="org-constant">True</span>)
+</pre>
+</div>
+
+<div class="notes">
+<p>
+This is slightly slower but is worth it for the code clarity and developer
+time savings.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Clarify multiple return values with named tuples</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">test</span>():
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> (0, 4)
+
+<span class="org-keyword">print</span>(test())
+</pre>
+</div>
+
+<pre class="example">
+(0, 4)
+
+</pre>
+
+<div class="notes">
+<p>
+Is this rest result good or bad? It's not clear.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-4-2-1" class="outline-4">
+<h4 id="sec-4-2-1"><span class="section-number-4">4.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> collections <span class="org-keyword">import</span> namedtuple
+
+<span class="org-variable-name">TestResult</span> = namedtuple(<span class="org-string">"TestResult"</span>, [<span class="org-string">"failed"</span>, <span class="org-string">"attempted"</span>])
+
+<span class="org-keyword">def</span> <span class="org-function-name">test</span>():
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> TestResult(failed=0, attempted=4)
+
+<span class="org-keyword">print</span>(test())
+</pre>
+</div>
+
+<pre class="example">
+TestResult(failed=0, attempted=4)
+
+</pre>
+
+<div class="notes">
+<p>
+Compatible with normal tuples.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Unpacking sequences</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">p</span> = <span class="org-string">'Raymond'</span>, <span class="org-string">'Hettinger'</span>, 0x30, <span class="org-string">'python@example.com'</span>
+
+<span class="org-variable-name">fname</span> = p[0]
+<span class="org-variable-name">lname</span> = p[1]
+<span class="org-variable-name">age</span> = p[2]
+<span class="org-variable-name">email</span> = p[3]
+
+<span class="org-keyword">print</span>(fname, lname, age, email)
+</pre>
+</div>
+
+<pre class="example">
+Raymond Hettinger 48 python@example.com
+
+</pre>
+</div>
+
+<div id="outline-container-sec-4-3-1" class="outline-4">
+<h4 id="sec-4-3-1"><span class="section-number-4">4.3.1</span> Better</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">p</span> = <span class="org-string">'Raymond'</span>, <span class="org-string">'Hettinger'</span>, 0x30, <span class="org-string">'python@example.com'</span>
+
+<span class="org-variable-name">fname</span>, <span class="org-variable-name">lname</span>, <span class="org-variable-name">age</span>, <span class="org-variable-name">email</span> = p
+
+<span class="org-keyword">print</span>(fname, lname, age, email)
+</pre>
+</div>
+
+<pre class="example">
+Raymond Hettinger 48 python@example.com
+
+</pre>
+
+<div class="notes">
+<p>
+This is faster and more readable.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Updating multiple state variables</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">fibonacci</span>(n):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">x</span> = 0
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">y</span> = 1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(x)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">t</span> = y
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">y</span> = x + y
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">x</span> = t
+fibonacci(10)
+</pre>
+</div>
+
+<pre class="example">
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+</pre>
+</div>
+
+<div id="outline-container-sec-4-4-1" class="outline-4">
+<h4 id="sec-4-4-1"><span class="section-number-4">4.4.1</span> Better</h4>
+<div class="outline-text-4" id="text-4-4-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">fibonacci</span>(n):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">x</span>, <span class="org-variable-name">y</span> = 0, 1
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(x)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">x</span>, <span class="org-variable-name">y</span> = y, x + y
+fibonacci(10)
+</pre>
+</div>
+
+<pre class="example">
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+</pre>
+
+<div class="notes">
+<p>
+The first approach has several problems:
+</p>
+<ul class="org-ul">
+<li><code>x</code> and <code>y</code> are state and state should be updated all at once or not at
+all. In between lines the state is mismatched and is a common source of
+errors,
+</li>
+<li>ordering of statements matters,
+</li>
+<li>it's too low level.
+</li>
+</ul>
+
+<p>
+The second approach is more high level, doesn't risk getting the order wrong
+and is fast.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> Simultaneous state updates</h3>
+<div class="outline-text-3" id="text-4-5">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">influence</span>, <span class="org-variable-name">x</span>, <span class="org-variable-name">y</span>, <span class="org-variable-name">dx</span>, <span class="org-variable-name">dy</span>, <span class="org-variable-name">t</span>, <span class="org-variable-name">m</span> = <span class="org-keyword">lambda</span> *args: 0, 0, 0, 0, 0, 0, 0
+
+<span class="org-variable-name">tmp_x</span> = x + dx * t
+<span class="org-variable-name">tmp_y</span> = y + dy * t
+<span class="org-variable-name">tmp_dx</span> = influence(m, x, y, dx, dy, <span class="org-string">'x'</span>)
+<span class="org-variable-name">tmp_dy</span> = influence(m, x, y, dx, dy, <span class="org-string">'y'</span>)
+<span class="org-variable-name">x</span> = tmp_x
+<span class="org-variable-name">y</span> = tmp_y
+<span class="org-variable-name">dx</span> = tmp_dx
+<span class="org-variable-name">dy</span> = tmp_dy
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-4-5-1" class="outline-4">
+<h4 id="sec-4-5-1"><span class="section-number-4">4.5.1</span> Better</h4>
+<div class="outline-text-4" id="text-4-5-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">influence</span>, <span class="org-variable-name">x</span>, <span class="org-variable-name">y</span>, <span class="org-variable-name">dx</span>, <span class="org-variable-name">dy</span>, <span class="org-variable-name">t</span>, <span class="org-variable-name">m</span> = <span class="org-keyword">lambda</span> *args: 0, 0, 0, 0, 0, 0, 0
+
+<span class="org-variable-name">x</span>, <span class="org-variable-name">y</span>, <span class="org-variable-name">dx</span>, <span class="org-variable-name">dy</span> = (x + dx * t,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   y + dy * t,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   influence(m, x, y, dx, dy, <span class="org-string">'x'</span>),
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   influence(m, x, y, dx, dy, <span class="org-string">'y'</span>))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Efficiency</h2>
+<div class="outline-text-2" id="text-5">
+<div class="notes">
+<p>
+Don't move data around unnecessarily. It takes only a little care to avoid
+quadratic behaviour in many cases.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Concatenating strings</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-variable-name">s</span> = names[0]
+<span class="org-keyword">for</span> name <span class="org-keyword">in</span> names[1:]:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">s</span> += <span class="org-string">', '</span> + name
+<span class="org-keyword">print</span>(s)
+</pre>
+</div>
+
+<pre class="example">
+raymond, rachel, matthew, roger, betty, melissa, judith, charlie
+
+</pre>
+</div>
+
+<div id="outline-container-sec-5-1-1" class="outline-4">
+<h4 id="sec-5-1-1"><span class="section-number-4">5.1.1</span> Better</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-keyword">print</span>(<span class="org-string">', '</span>.join(names))
+</pre>
+</div>
+
+<pre class="example">
+raymond, rachel, matthew, roger, betty, melissa, judith, charlie
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Updating sequences</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">names</span> = [<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span><span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>]
+
+<span class="org-keyword">del</span> names[0]
+names.pop(0)
+names.insert(0, <span class="org-string">'mark'</span>)
+
+<span class="org-keyword">print</span>(names)
+</pre>
+</div>
+
+<pre class="example">
+['mark', 'matthew', 'roger', 'betty', 'melissa', 'judith', 'charlie']
+
+</pre>
+</div>
+
+<div id="outline-container-sec-5-2-1" class="outline-4">
+<h4 id="sec-5-2-1"><span class="section-number-4">5.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-5-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> collections <span class="org-keyword">import</span> deque
+
+<span class="org-variable-name">names</span> = deque([<span class="org-string">'raymond'</span>, <span class="org-string">'rachel'</span>, <span class="org-string">'matthew'</span>, <span class="org-string">'roger'</span>,
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>  <span class="org-string">'betty'</span>, <span class="org-string">'melissa'</span>, <span class="org-string">'judith'</span>, <span class="org-string">'charlie'</span>])
+
+<span class="org-keyword">del</span> names[0]
+names.popleft()
+names.appendleft(<span class="org-string">'mark'</span>)
+
+<span class="org-keyword">print</span>(<span class="org-builtin">list</span>(names))
+</pre>
+</div>
+
+<pre class="example">
+['mark', 'matthew', 'roger', 'betty', 'melissa', 'judith', 'charlie']
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Decorators and context managers</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Using decorators to factor out administrative logic</h3>
+<div class="outline-text-3" id="text-6-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">web_lookup</span>(url, saved={}):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> url <span class="org-keyword">in</span> saved:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> saved[url]
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">page</span> = urllib.urlopen(url).read()
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">saved</span>[url] = page
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">return</span> page
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-6-1-1" class="outline-4">
+<h4 id="sec-6-1-1"><span class="section-number-4">6.1.1</span> Better</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> functools
+
+<span class="org-type">@functools.lru_cache</span>(maxsize=128)
+<span class="org-keyword">def</span> <span class="org-function-name">web_lookup</span>(url):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">return</span> urllib.urlopen(url).read()
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> Factor out temporary contexts</h3>
+<div class="outline-text-3" id="text-6-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> decimal <span class="org-keyword">import</span> Decimal, getcontext, setcontext
+
+<span class="org-variable-name">old_context</span> = getcontext().copy()
+getcontext()<span class="org-variable-name">.prec</span> = 50
+<span class="org-keyword">print</span>(Decimal(355)/Decimal(113))
+setcontext(old_context)
+</pre>
+</div>
+
+<pre class="example">
+3.1415929203539823008849557522123893805309734513274
+
+</pre>
+</div>
+
+<div id="outline-container-sec-6-2-1" class="outline-4">
+<h4 id="sec-6-2-1"><span class="section-number-4">6.2.1</span> Better</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> decimal <span class="org-keyword">import</span> Decimal, Context, localcontext
+
+<span class="org-keyword">with</span> localcontext(Context(prec=50)):
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(Decimal(355)/Decimal(113))
+</pre>
+</div>
+
+<pre class="example">
+3.1415929203539823008849557522123893805309734513274
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> Opening and closing files</h3>
+<div class="outline-text-3" id="text-6-3">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-variable-name">f</span> = <span class="org-builtin">open</span>(<span class="org-string">'README.org'</span>)
+<span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">firstline</span> = <span class="org-builtin">next</span>(f)
+<span class="org-keyword">finally</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   f.close()
+
+<span class="org-keyword">print</span>(firstline)
+</pre>
+</div>
+
+<pre class="example">
+#+OPTIONS: ':nil *:t -:t ::t &lt;:t H:3 \n:nil ^:t arch:headline author:t
+
+
+</pre>
+</div>
+
+<div id="outline-container-sec-6-3-1" class="outline-4">
+<h4 id="sec-6-3-1"><span class="section-number-4">6.3.1</span> Better</h4>
+<div class="outline-text-4" id="text-6-3-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">with</span> <span class="org-builtin">open</span>(<span class="org-string">"README.org"</span>) <span class="org-keyword">as</span> f:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">firstline</span> = <span class="org-builtin">next</span>(f)
+
+<span class="org-keyword">print</span>(firstline)
+</pre>
+</div>
+
+<pre class="example">
+#+OPTIONS: ':nil *:t -:t ::t &lt;:t H:3 \n:nil ^:t arch:headline author:t
+
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6-4" class="outline-3">
+<h3 id="sec-6-4"><span class="section-number-3">6.4</span> Using locks</h3>
+<div class="outline-text-3" id="text-6-4">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+
+<span class="org-variable-name">lock</span> = threading.Lock()
+
+lock.acquire()
+<span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(<span class="org-string">'Critical section 1'</span>)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(<span class="org-string">'Critical section 2'</span>)
+<span class="org-keyword">finally</span>:
+<span class="org-highlight-indentation"> </span>   lock.release()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-6-4-1" class="outline-4">
+<h4 id="sec-6-4-1"><span class="section-number-4">6.4.1</span> Better</h4>
+<div class="outline-text-4" id="text-6-4-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> threading
+
+<span class="org-variable-name">lock</span> = threading.Lock()
+
+<span class="org-keyword">with</span> lock:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">print</span>(<span class="org-string">'Critical section 1'</span>)
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">print</span>(<span class="org-string">'Critical section 2'</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6-5" class="outline-3">
+<h3 id="sec-6-5"><span class="section-number-3">6.5</span> Custom context managers</h3>
+<div class="outline-text-3" id="text-6-5">
+</div><div id="outline-container-sec-6-5-1" class="outline-4">
+<h4 id="sec-6-5-1"><span class="section-number-4">6.5.1</span> Ignoring exceptions</h4>
+<div class="outline-text-4" id="text-6-5-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> os
+<span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   os.remove(<span class="org-string">'somefile.tmp'</span>)
+<span class="org-keyword">except</span> <span class="org-type">OSError</span>:
+<span class="org-highlight-indentation"> </span>   <span class="org-keyword">pass</span>
+</pre>
+</div>
+
+<div class="notes">
+<p>
+Don't check file exists then remove. Then you get a race condition.
+</p>
+
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> os
+<span class="org-keyword">from</span> contextlib <span class="org-keyword">import</span> suppress
+<span class="org-keyword">with</span> suppress(<span class="org-type">OSError</span>):
+<span class="org-highlight-indentation"> </span>   os.remove(<span class="org-string">'somefile.tmp'</span>)
+</pre>
+</div>
+
+<p>
+<code>contextlib.suppress</code> is included in Python 3.4 and later. In earlier versions
+it can be implemented as:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> contextlib <span class="org-keyword">import</span> contextmanager
+<span class="org-type">@contextmanager</span>
+<span class="org-keyword">def</span> <span class="org-function-name">suppress</span>(*exceptions):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">yield</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">except</span> exceptions:
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-keyword">pass</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6-5-2" class="outline-4">
+<h4 id="sec-6-5-2"><span class="section-number-4">6.5.2</span> Output redirection</h4>
+<div class="outline-text-4" id="text-6-5-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> sys
+<span class="org-keyword">with</span> <span class="org-builtin">open</span>(<span class="org-string">'help.txt'</span>, <span class="org-string">'w'</span>) <span class="org-keyword">as</span> f:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">oldstdout</span> = sys.stdout
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">sys.stdout</span> = f
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-builtin">help</span>(<span class="org-builtin">pow</span>)
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">finally</span>:
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-variable-name">sys.stdout</span> = oldstdout
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">from</span> contextlib <span class="org-keyword">import</span> redirect_stdout
+<span class="org-keyword">with</span> <span class="org-builtin">open</span>(<span class="org-string">'help.txt'</span>, <span class="org-string">'w'</span>) <span class="org-keyword">as</span> f:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">with</span> redirect_stdout(f):
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-builtin">help</span>(<span class="org-builtin">pow</span>)
+</pre>
+</div>
+
+<p>
+<code>contextlib.redirect_stdout</code> is included since Python 3.4. In earlier versions
+use:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">import</span> sys
+<span class="org-keyword">from</span> contextlib <span class="org-keyword">import</span> contextmanager
+<span class="org-type">@contextmanager</span>
+<span class="org-keyword">def</span> <span class="org-function-name">redirect_stdout</span>(fileobj):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">oldstdout</span> = sys.stdout
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-variable-name">sys.stdout</span> = fileobj
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">try</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">yield</span> fileobj
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">finally</span>:
+<span class="org-highlight-indentation"> </span>   <span class="org-highlight-indentation"> </span>   <span class="org-variable-name">sys.stdout</span> = oldstdout
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Miscellaneous</h2>
+<div class="outline-text-2" id="text-7">
+</div><div id="outline-container-sec-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> Class properties</h3>
+<div class="outline-text-3" id="text-7-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">class</span> <span class="org-type">Widget</span>():
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, width, position):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>.width = width
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>.position = position
+
+<span class="org-variable-name">w</span> = Widget(1000, 200)
+<span class="org-keyword">print</span>(w.width, w.position)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-7-1-1" class="outline-4">
+<h4 id="sec-7-1-1"><span class="section-number-4">7.1.1</span> Getter and setter</h4>
+<div class="outline-text-4" id="text-7-1-1">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">class</span> <span class="org-type">Widget</span>():
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, width, position):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._width = width
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = position
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">get_width</span>(<span class="org-keyword">self</span>):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> <span class="org-keyword">self</span>._width
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">set_width</span>(<span class="org-keyword">self</span>, new_width):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._width = new_width
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">get_position</span>(<span class="org-keyword">self</span>):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> <span class="org-keyword">self</span>._position
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">set_position</span>(<span class="org-keyword">self</span>, new_position):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> new_position &lt; 0:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = 0
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">elif</span> new_position &gt; <span class="org-keyword">self</span>._width:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = <span class="org-keyword">self</span>._width
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">else</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = new_position
+
+<span class="org-variable-name">w</span> = Widget(1000, 200)
+w.set_position(1200)
+<span class="org-keyword">print</span>(w.get_width(), w.get_position())
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7-1-2" class="outline-4">
+<h4 id="sec-7-1-2"><span class="section-number-4">7.1.2</span> Better</h4>
+<div class="outline-text-4" id="text-7-1-2">
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="org-keyword">class</span> <span class="org-type">Widget</span>():
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, width, position):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>.width = width
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>.position = position
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-type">@property</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">position</span>(<span class="org-keyword">self</span>):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">return</span> <span class="org-keyword">self</span>._position
+
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-type">@position.setter</span>
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">def</span> <span class="org-function-name">position</span>(<span class="org-keyword">self</span>, new_position):
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">if</span> new_position &lt; 0:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = 0
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">elif</span> new_position &gt; <span class="org-keyword">self</span>.width:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = <span class="org-keyword">self</span>.width
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">else</span>:
+<span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-highlight-indentation"><span class="org-highlight-indentation"> </span></span>   <span class="org-keyword">self</span>._position = new_position
+
+<span class="org-variable-name">w</span> = Widget(1000, 1200)
+<span class="org-keyword">print</span>(w.width, w.position)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> End</h2>
+</div>
+</div><div class="col-md-3"><nav id="table-of-contents">
+<div id="text-table-of-contents" class="bs-docs-sidebar">
+<ul class="nav">
+<li><a href="#sec-1">1. Pythonic?</a>
+<ul class="nav">
+<li><a href="#sec-1-1">1.1. Speak you English?</a></li>
+<li><a href="#sec-1-2">1.2. What am I?</a>
+<ul class="nav">
+<li><a href="#sec-1-2-1">1.2.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3. Idiomatic usage</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Iterating</a>
+<ul class="nav">
+<li><a href="#sec-2-1">2.1. Looping over a range of numbers</a>
+<ul class="nav">
+<li><a href="#sec-2-1-1">2.1.1. Better</a></li>
+<li><a href="#sec-2-1-2">2.1.2. Python 2 note</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2. Looping over a collection</a>
+<ul class="nav">
+<li><a href="#sec-2-2-1">2.2.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. Looping backwards</a>
+<ul class="nav">
+<li><a href="#sec-2-3-1">2.3.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4. Looping over a collection and indices</a>
+<ul class="nav">
+<li><a href="#sec-2-4-1">2.4.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-5">2.5. Looping over two collections</a>
+<ul class="nav">
+<li><a href="#sec-2-5-1">2.5.1. Better</a></li>
+<li><a href="#sec-2-5-2">2.5.2. Python 2 note</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-6">2.6. Looping in sorted order</a></li>
+<li><a href="#sec-2-7">2.7. Custom sort order</a>
+<ul class="nav">
+<li><a href="#sec-2-7-1">2.7.1. Python 2 note</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-8">2.8. Call a function until a sentinel value</a>
+<ul class="nav">
+<li><a href="#sec-2-8-1">2.8.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-9">2.9. Distinguishing multiple exit points in loops</a>
+<ul class="nav">
+<li><a href="#sec-2-9-1">2.9.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-10">2.10. List comprehensions</a>
+<ul class="nav">
+<li><a href="#sec-2-10-1">2.10.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-11">2.11. Generator expressions</a>
+<ul class="nav">
+<li><a href="#sec-2-11-1">2.11.1. Better</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Dictionary skills</a>
+<ul class="nav">
+<li><a href="#sec-3-1">3.1. Looping over dictionary keys</a>
+<ul class="nav">
+<li><a href="#sec-3-1-1">3.1.1. Python 2 note</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. Looping over dictionary keys and values</a>
+<ul class="nav">
+<li><a href="#sec-3-2-1">3.2.1. Better</a></li>
+<li><a href="#sec-3-2-2">3.2.2. Python 2 note</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-3">3.3. Construct a dictionary from pairs</a></li>
+<li><a href="#sec-3-4">3.4. Counting with dictionaries</a>
+<ul class="nav">
+<li><a href="#sec-3-4-1">3.4.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-5">3.5. Grouping with dictionaries</a>
+<ul class="nav">
+<li><a href="#sec-3-5-1">3.5.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-6">3.6. Pop items from dictionary atomically</a></li>
+<li><a href="#sec-3-7">3.7. Linking dictionaries</a>
+<ul class="nav">
+<li><a href="#sec-3-7-1">3.7.1. Better</a></li>
+<li><a href="#sec-3-7-2">3.7.2. Python 2 note</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Improving clarity</a>
+<ul class="nav">
+<li><a href="#sec-4-1">4.1. Clarify function calls with keyword arguments</a>
+<ul class="nav">
+<li><a href="#sec-4-1-1">4.1.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-2">4.2. Clarify multiple return values with named tuples</a>
+<ul class="nav">
+<li><a href="#sec-4-2-1">4.2.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-3">4.3. Unpacking sequences</a>
+<ul class="nav">
+<li><a href="#sec-4-3-1">4.3.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-4">4.4. Updating multiple state variables</a>
+<ul class="nav">
+<li><a href="#sec-4-4-1">4.4.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-5">4.5. Simultaneous state updates</a>
+<ul class="nav">
+<li><a href="#sec-4-5-1">4.5.1. Better</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Efficiency</a>
+<ul class="nav">
+<li><a href="#sec-5-1">5.1. Concatenating strings</a>
+<ul class="nav">
+<li><a href="#sec-5-1-1">5.1.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-2">5.2. Updating sequences</a>
+<ul class="nav">
+<li><a href="#sec-5-2-1">5.2.1. Better</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-6">6. Decorators and context managers</a>
+<ul class="nav">
+<li><a href="#sec-6-1">6.1. Using decorators to factor out administrative logic</a>
+<ul class="nav">
+<li><a href="#sec-6-1-1">6.1.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-2">6.2. Factor out temporary contexts</a>
+<ul class="nav">
+<li><a href="#sec-6-2-1">6.2.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-3">6.3. Opening and closing files</a>
+<ul class="nav">
+<li><a href="#sec-6-3-1">6.3.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-4">6.4. Using locks</a>
+<ul class="nav">
+<li><a href="#sec-6-4-1">6.4.1. Better</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-5">6.5. Custom context managers</a>
+<ul class="nav">
+<li><a href="#sec-6-5-1">6.5.1. Ignoring exceptions</a></li>
+<li><a href="#sec-6-5-2">6.5.2. Output redirection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-7">7. Miscellaneous</a>
+<ul class="nav">
+<li><a href="#sec-7-1">7.1. Class properties</a>
+<ul class="nav">
+<li><a href="#sec-7-1-1">7.1.1. Getter and setter</a></li>
+<li><a href="#sec-7-1-2">7.1.2. Better</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-8">8. End</a></li>
+</ul>
+</div>
+</nav>
+</div></div></div>
+<footer id="postamble" class="">
+<div><p class="author">Author: gk</p>
+<p class="date">Created: 2018-04-04 Wed 13:54</p>
+</div>
+</footer>
+</body>
+</html>
